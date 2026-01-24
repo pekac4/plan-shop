@@ -292,18 +292,18 @@ new class extends Component
                                                 · {{ $entry->servings }} {{ __('servings') }}
                                             </div>
                                             <div class="flex flex-wrap items-center gap-2">
-                                                <x-ui.button size="sm" variant="secondary" wire:click="startEditing('{{ $day->toDateString() }}', '{{ $meal }}')" data-test="meal-edit-{{ $slotKey }}">
-                                                    {{ __('Edit') }}
-                                                </x-ui.button>
-                                                <x-ui.button size="sm" variant="secondary" wire:click="removeEntry({{ $entry->id }})" data-test="meal-remove-{{ $slotKey }}">
-                                                    {{ __('Remove') }}
-                                                </x-ui.button>
+                <x-ui.button size="sm" variant="edit" wire:click="startEditing('{{ $day->toDateString() }}', '{{ $meal }}')" data-test="meal-edit-{{ $slotKey }}">
+                    {{ __('Edit') }}
+                </x-ui.button>
+                <x-ui.button size="sm" variant="danger" wire:click="removeEntry({{ $entry->id }})" data-test="meal-remove-{{ $slotKey }}">
+                    {{ __('Remove') }}
+                </x-ui.button>
                                             </div>
                                         </div>
                                     @else
-                                        <x-ui.button size="sm" variant="secondary" wire:click="startEditing('{{ $day->toDateString() }}', '{{ $meal }}')" data-test="meal-add-{{ $slotKey }}">
-                                            {{ __('Add') }}
-                                        </x-ui.button>
+            <x-ui.button size="sm" variant="primary" wire:click="startEditing('{{ $day->toDateString() }}', '{{ $meal }}')" data-test="meal-add-{{ $slotKey }}">
+                {{ __('Add') }}
+            </x-ui.button>
                                     @endif
                                 </div>
                             @endforeach

@@ -196,7 +196,7 @@
                                         @else
                                         <form method="POST" action="{{ route('recipes.add-to-library', $entry->recipe) }}">
                                             @csrf
-                                            <x-ui.button size="sm" variant="secondary" type="submit">
+                                            <x-ui.button size="sm" variant="success" type="submit">
                                                 {{ __('Add to my recipe book') }}
                                             </x-ui.button>
                                         </form>

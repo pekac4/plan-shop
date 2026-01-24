@@ -193,7 +193,7 @@ new class extends Component
         <x-ui.card class="p-6 space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <h2 class="text-lg font-semibold text-slate-900">{{ __('Ingredients') }}</h2>
-                <x-ui.button size="sm" variant="secondary" type="button" wire:click="addIngredient">
+                <x-ui.button size="sm" variant="primary" type="button" wire:click="addIngredient">
                     {{ __('Add ingredient') }}
                 </x-ui.button>
             </div>
@@ -251,7 +251,7 @@ new class extends Component
                         </div>
 
                         <div class="flex items-center justify-end">
-                            <x-ui.button size="sm" variant="secondary" type="button" wire:click="removeIngredient({{ $index }})">
+                            <x-ui.button size="sm" variant="danger" type="button" wire:click="removeIngredient({{ $index }})">
                                 {{ __('Remove') }}
                             </x-ui.button>
                         </div>

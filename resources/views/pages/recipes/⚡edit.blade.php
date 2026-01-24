@@ -256,7 +256,7 @@ new class extends Component
             </x-ui.button>
 
             @if ($canEdit)
-                <x-ui.button size="sm" variant="secondary" type="button" wire:click="duplicateRecipe">
+                <x-ui.button size="sm" variant="primary" type="button" wire:click="duplicateRecipe">
                     {{ __('Save as copy') }}
                 </x-ui.button>
                 <x-ui.button size="sm" variant="danger" type="button" wire:click="deleteRecipe">
@@ -298,7 +298,7 @@ new class extends Component
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <h2 class="text-lg font-semibold text-slate-900">{{ __('Ingredients') }}</h2>
                 @if ($canEdit)
-                    <x-ui.button size="sm" variant="secondary" type="button" wire:click="addIngredient">
+                    <x-ui.button size="sm" variant="primary" type="button" wire:click="addIngredient">
                         {{ __('Add ingredient') }}
                     </x-ui.button>
                 @endif
@@ -363,7 +363,7 @@ new class extends Component
 
                         @if ($canEdit)
                             <div class="flex items-center justify-end">
-                                <x-ui.button size="sm" variant="secondary" type="button" wire:click="removeIngredient({{ $index }})">
+                                <x-ui.button size="sm" variant="danger" type="button" wire:click="removeIngredient({{ $index }})">
                                     {{ __('Remove') }}
                                 </x-ui.button>
                             </div>

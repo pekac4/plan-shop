@@ -315,7 +315,7 @@ new class extends Component
             </div>
 
             <div class="flex items-center justify-end">
-                <x-ui.button size="sm" variant="secondary" wire:click="addCustomItem">
+                <x-ui.button size="sm" variant="primary" wire:click="addCustomItem">
                     {{ __('Add custom item') }}
                 </x-ui.button>
             </div>

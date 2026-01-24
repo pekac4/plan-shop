@@ -3,6 +3,7 @@
 use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
 
@@ -43,4 +44,29 @@ it('shows only owned recipes on the recipes index', function () {
         ->assertSee($owned->title)
         ->assertSee('Copied Recipe')
         ->assertDontSee('Public Recipe');
+});
+
+it('shows only view and delete actions for copied recipes from others', function () {
+    $user = User::factory()->create();
+    $other = User::factory()->create();
+
+    $original = Recipe::factory()->for($other)->create([
+        'title' => 'Community Recipe',
+        'is_public' => true,
+    ]);
+
+    Recipe::factory()->for($user)->create([
+        'title' => 'Community Recipe',
+        'original_recipe_id' => $original->id,
+        'is_public' => true,
+    ]);
+
+    Livewire::actingAs($user)
+        ->test('pages::recipes.index')
+        ->set('ownership', 'copied')
+        ->assertSee('Community Recipe')
+        ->assertSee('View')
+        ->assertSee('Delete')
+        ->assertDontSee('Edit')
+        ->assertDontSee('Save as copy');
 });

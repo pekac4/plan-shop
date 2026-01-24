@@ -137,26 +137,16 @@ new class extends Component
             </p>
         </div>
 
-        <a
-            href="{{ route('recipes.create') }}"
-            wire:navigate
-            data-test="recipes-create"
-            class="inline-flex items-center justify-center rounded-xl bg-green-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-green-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-        >
+        <x-ui.button variant="primary" :href="route('recipes.create')" wire:navigate data-test="recipes-create">
             {{ __('Create Recipe') }}
-        </a>
+        </x-ui.button>
     </div>
 
     <x-ui.card class="p-6 space-y-4">
         <div class="flex justify-end">
-            <a
-                href="{{ route('recipes.create') }}"
-                wire:navigate
-                data-test="recipes-create-secondary"
-                class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-            >
+            <x-ui.button variant="primary" :href="route('recipes.create')" wire:navigate data-test="recipes-create-secondary">
                 {{ __('Create Recipe') }}
-            </a>
+            </x-ui.button>
         </div>
 
         <div class="grid gap-4 md:grid-cols-4">
@@ -233,21 +223,34 @@ new class extends Component
                             </div>
                         </div>
 
+                        @php
+                            $isCopiedFromOther = $recipe->original_recipe_id !== null
+                                && $recipe->originalRecipe?->user_id !== Auth::id();
+                        @endphp
+
                         <div class="flex flex-wrap items-center gap-2">
-                            @can('update', $recipe)
-                                <x-ui.button size="sm" variant="secondary" :href="route('recipes.edit', $recipe)" wire:navigate>
-                                    {{ __('Edit') }}
-                                </x-ui.button>
-                            @else
+                            @if ($isCopiedFromOther)
                                 <x-ui.button size="sm" variant="secondary" :href="route('recipes.edit', $recipe)" wire:navigate>
                                     {{ __('View') }}
                                 </x-ui.button>
-                            @endcan
+                            @else
+                                @can('update', $recipe)
+                                    <x-ui.button size="sm" variant="edit" :href="route('recipes.edit', $recipe)" wire:navigate>
+                                        {{ __('Edit') }}
+                                    </x-ui.button>
+                                @else
+                                    <x-ui.button size="sm" variant="secondary" :href="route('recipes.edit', $recipe)" wire:navigate>
+                                        {{ __('View') }}
+                                    </x-ui.button>
+                                @endcan
+                            @endif
 
                             @can('duplicate', $recipe)
-                                <x-ui.button size="sm" variant="secondary" wire:click="duplicateRecipe({{ $recipe->id }})">
-                                    {{ __('Save as copy') }}
-                                </x-ui.button>
+                                @if ($recipe->original_recipe_id === null && $recipe->user_id === Auth::id())
+                                    <x-ui.button size="sm" variant="primary" wire:click="duplicateRecipe({{ $recipe->id }})">
+                                        {{ __('Save as copy') }}
+                                    </x-ui.button>
+                                @endif
                             @endcan
 
                             @can('delete', $recipe)
