@@ -3,6 +3,7 @@
 namespace App\Actions\ShoppingList;
 
 use App\Models\MealPlanEntry;
+use App\Models\ShoppingListCustomItem;
 use App\Models\ShoppingListItem;
 use App\Models\User;
 use Carbon\CarbonImmutable;
@@ -12,7 +13,7 @@ use Illuminate\Support\Str;
 class BuildShoppingList
 {
     /**
-     * @return list<array{id: int, name: string, unit: string|null, quantity: string|null, display_quantity: string|null, price: string|null, checked_at: string|null, source_recipes_count: int}>
+     * @return list<array{id: int, name: string, unit: string|null, quantity: string|null, display_quantity: string|null, price: string|null, checked_at: string|null, source_recipes_count: int, is_custom: bool}>
      */
     public function handle(User $user, CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd): array
     {
@@ -73,7 +74,7 @@ class BuildShoppingList
             }
         }
 
-        $items = collect(array_values($aggregated))
+        $recipeItems = collect(array_values($aggregated))
             ->map(function (array $item): array {
                 $quantity = round((float) $item['quantity'], 2);
                 $price = round((float) $item['price'], 2);
@@ -92,7 +93,12 @@ class BuildShoppingList
             ->merge($nonAggregated)
             ->values();
 
-        return $this->persistList($user, $rangeStart, $rangeEnd, $items)->all();
+        $persisted = $this->persistList($user, $rangeStart, $rangeEnd, $recipeItems);
+
+        return $persisted
+            ->merge($this->customItems($user, $rangeStart, $rangeEnd))
+            ->values()
+            ->all();
     }
 
     protected function persistList(User $user, CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd, Collection $items): Collection
@@ -133,6 +139,7 @@ class BuildShoppingList
                 'price' => $this->formatDisplayPrice($stored->price),
                 'checked_at' => $stored->checked_at?->toDateTimeString(),
                 'source_recipes_count' => count(array_unique($item['recipe_ids'] ?? [])),
+                'is_custom' => false,
             ];
         });
     }
@@ -173,5 +180,35 @@ class BuildShoppingList
         }
 
         return rtrim(rtrim($price, '0'), '.');
+    }
+
+    /**
+     * @return list<array{id: int, name: string, unit: null, quantity: string|null, display_quantity: string|null, price: string|null, checked_at: string|null, source_recipes_count: int, is_custom: bool}>
+     */
+    protected function customItems(User $user, CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd): array
+    {
+        return ShoppingListCustomItem::query()
+            ->where('user_id', $user->id)
+            ->where('range_start', $rangeStart->toDateString())
+            ->where('range_end', $rangeEnd->toDateString())
+            ->with('customItem')
+            ->get()
+            ->map(function (ShoppingListCustomItem $item): array {
+                $quantity = $item->quantity;
+                $price = $item->price;
+
+                return [
+                    'id' => $item->id,
+                    'name' => $item->customItem?->name ?? (string) $item->custom_shopping_item_id,
+                    'unit' => null,
+                    'quantity' => $quantity ? $this->formatStoredQuantity((float) $quantity) : null,
+                    'display_quantity' => $quantity ? $this->formatDisplayQuantity($this->formatStoredQuantity((float) $quantity)) : null,
+                    'price' => $price ? $this->formatStoredPrice((float) $price) : null,
+                    'checked_at' => $item->checked_at?->toDateTimeString(),
+                    'source_recipes_count' => 0,
+                    'is_custom' => true,
+                ];
+            })
+            ->all();
     }
 }
