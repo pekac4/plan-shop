@@ -1,19 +1,25 @@
 <?php
 
 use App\Concerns\ProfileValidationRules;
+use App\ImageResizer;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\File;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 new class extends Component {
     use ProfileValidationRules;
+    use WithFileUploads;
 
     public string $name = '';
     public string $email = '';
+    public $avatar = null;
 
     /**
      * Mount the component.
@@ -31,7 +37,10 @@ new class extends Component {
     {
         $user = Auth::user();
 
-        $validated = $this->validate($this->profileRules($user->id));
+        $validated = $this->validate(array_merge(
+            $this->profileRules($user->id),
+            ['avatar' => ['nullable', File::image()->max(2 * 1024)]],
+        ));
 
         $user->fill($validated);
 
@@ -40,6 +49,8 @@ new class extends Component {
         }
 
         $user->save();
+
+        $this->storeAvatar($user);
 
         $this->dispatch('profile-updated', name: $user->name);
     }
@@ -74,6 +85,37 @@ new class extends Component {
         return ! Auth::user() instanceof MustVerifyEmail
             || (Auth::user() instanceof MustVerifyEmail && Auth::user()->hasVerifiedEmail());
     }
+
+    protected function storeAvatar(User $user): void
+    {
+        if (! $this->avatar) {
+            return;
+        }
+
+        $disk = Storage::disk('public');
+        $directory = 'avatars/'.$user->id;
+        $extension = strtolower((string) $this->avatar->getClientOriginalExtension()) ?: 'jpg';
+        $avatarPath = $directory.'/avatar.'.$extension;
+
+        $disk->makeDirectory($directory);
+
+        $sourcePath = $this->avatar->getRealPath();
+        $avatarFullPath = $disk->path($avatarPath);
+
+        $saved = $sourcePath
+            ? ImageResizer::resizeToFit($sourcePath, $avatarFullPath, 256, 256)
+            : false;
+
+        if (! $saved) {
+            $disk->putFileAs($directory, $this->avatar, 'avatar.'.$extension);
+        }
+
+        if ($user->avatar_path && $user->avatar_path !== $avatarPath) {
+            $disk->delete($user->avatar_path);
+        }
+
+        $user->forceFill(['avatar_path' => $avatarPath])->save();
+    }
 }; ?>
 
 <section class="w-full">
@@ -81,6 +123,29 @@ new class extends Component {
 
     <x-pages::settings.layout :heading="__('Profile')" :subheading="__('Update your name and email address')">
         <form wire:submit="updateProfileInformation" class="space-y-6">
+            <div class="flex flex-wrap items-center gap-4">
+                @if ($avatar)
+                    <img
+                        src="{{ $avatar->temporaryUrl() }}"
+                        alt="{{ __('Avatar preview') }}"
+                        class="h-16 w-16 rounded-full object-cover"
+                    />
+                @elseif (auth()->user()->avatar_url)
+                    <img
+                        src="{{ auth()->user()->avatar_url }}"
+                        alt="{{ auth()->user()->name }}"
+                        class="h-16 w-16 rounded-full object-cover"
+                    />
+                @else
+                    <flux:avatar :name="auth()->user()->name" :initials="auth()->user()->initials()" size="lg" />
+                @endif
+
+                <div class="flex-1">
+                    <x-ui.input wire:model="avatar" name="avatar" :label="__('Avatar image')" type="file" accept="image/*" />
+                    <p class="mt-1 text-xs text-slate-500">{{ __('Optional. Square images work best.') }}</p>
+                </div>
+            </div>
+
             <x-ui.input wire:model="name" name="name" :label="__('Name')" type="text" required autofocus autocomplete="name" />
 
             <div class="space-y-4">

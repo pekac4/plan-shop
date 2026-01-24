@@ -193,33 +193,48 @@ new class extends Component
             @forelse ($this->recipes as $recipe)
                 <x-ui.card class="p-4">
                     <div class="flex flex-wrap items-start justify-between gap-3">
-                        <div class="space-y-2">
-                            <div>
-                                <a class="text-lg font-semibold text-slate-900 hover:text-green-700" href="{{ route('recipes.edit', $recipe) }}" wire:navigate>
-                                    {{ $recipe->title }}
-                                </a>
-                                <p class="text-sm text-slate-600">
-                                    {{ $recipe->servings }} {{ __('servings') }} · {{ $recipe->ingredients_count }} {{ __('ingredients') }}
-                                </p>
-                                @if ($recipe->originalRecipe)
-                                    <p class="text-xs text-slate-500">
-                                        {{ __('Original by') }} {{ $recipe->originalRecipe->user?->name ?? __('Unknown') }}
-                                    </p>
-                                @elseif ($recipe->user_id !== Auth::id())
-                                    <p class="text-xs text-slate-500">
-                                        {{ __('By') }} {{ $recipe->user?->name ?? __('Unknown') }}
-                                    </p>
-                                @endif
-                                <p class="text-sm text-slate-600">
-                                    {{ __('Approx.') }} ${{ number_format($recipe->approximate_price, 2) }}
-                                </p>
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2">
-                                @if ($recipe->is_public)
-                                    <x-ui.badge tone="emerald">{{ __('Public') }}</x-ui.badge>
+                        <div class="flex items-start gap-4">
+                            <div class="h-20 w-24 overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+                                @if ($recipe->cover_thumbnail_url)
+                                    <img
+                                        src="{{ $recipe->cover_thumbnail_url }}"
+                                        alt="{{ $recipe->title }}"
+                                        class="h-full w-full object-cover"
+                                    />
                                 @else
-                                    <x-ui.badge tone="amber">{{ __('Private') }}</x-ui.badge>
+                                    <div class="flex h-full w-full items-center justify-center text-xl">
+                                        🥬
+                                    </div>
                                 @endif
+                            </div>
+                            <div class="space-y-2">
+                                <div>
+                                    <a class="text-lg font-semibold text-slate-900 hover:text-green-700" href="{{ route('recipes.edit', $recipe) }}" wire:navigate>
+                                        {{ $recipe->title }}
+                                    </a>
+                                    <p class="text-sm text-slate-600">
+                                        {{ $recipe->servings }} {{ __('servings') }} · {{ $recipe->ingredients_count }} {{ __('ingredients') }}
+                                    </p>
+                                    @if ($recipe->originalRecipe)
+                                        <p class="text-xs text-slate-500">
+                                            {{ __('Original by') }} {{ $recipe->originalRecipe->user?->name ?? __('Unknown') }}
+                                        </p>
+                                    @elseif ($recipe->user_id !== Auth::id())
+                                        <p class="text-xs text-slate-500">
+                                            {{ __('By') }} {{ $recipe->user?->name ?? __('Unknown') }}
+                                        </p>
+                                    @endif
+                                    <p class="text-sm text-slate-600">
+                                        {{ __('Approx.') }} ${{ number_format($recipe->approximate_price, 2) }}
+                                    </p>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-2">
+                                    @if ($recipe->is_public)
+                                        <x-ui.badge tone="emerald">{{ __('Public') }}</x-ui.badge>
+                                    @else
+                                        <x-ui.badge tone="amber">{{ __('Private') }}</x-ui.badge>
+                                    @endif
+                                </div>
                             </div>
                         </div>
 

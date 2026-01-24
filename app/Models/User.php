@@ -24,6 +24,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar_path',
     ];
 
     /**
@@ -76,5 +77,14 @@ class User extends Authenticatable
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    public function getAvatarUrlAttribute(): ?string
+    {
+        if (! $this->avatar_path) {
+            return null;
+        }
+
+        return \Illuminate\Support\Facades\Storage::disk('public')->url($this->avatar_path);
     }
 }

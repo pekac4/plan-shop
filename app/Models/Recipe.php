@@ -27,6 +27,8 @@ class Recipe extends Model
         'cook_time_minutes',
         'instructions',
         'source_url',
+        'cover_image_path',
+        'cover_thumbnail_path',
         'is_public',
     ];
 
@@ -83,5 +85,23 @@ class Recipe extends Model
         }, 0.0);
 
         return round($total, 2);
+    }
+
+    public function getCoverImageUrlAttribute(): ?string
+    {
+        if (! $this->cover_image_path) {
+            return null;
+        }
+
+        return \Illuminate\Support\Facades\Storage::disk('public')->url($this->cover_image_path);
+    }
+
+    public function getCoverThumbnailUrlAttribute(): ?string
+    {
+        if (! $this->cover_thumbnail_path) {
+            return null;
+        }
+
+        return \Illuminate\Support\Facades\Storage::disk('public')->url($this->cover_thumbnail_path);
     }
 }

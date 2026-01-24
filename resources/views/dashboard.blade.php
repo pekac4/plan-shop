@@ -153,32 +153,47 @@
                         <h2 class="text-lg font-semibold text-slate-900">{{ __('Community favorites') }}</h2>
                         <p class="text-xs text-slate-500">{{ $monthLabel }}</p>
                     </div>
-                    <div class="grid gap-2 text-sm text-slate-700">
+                    <div class="grid text-sm text-slate-700">
                         @forelse ($topCommunityRecipes as $entry)
                             @php
                                 $alreadyOwned = $ownedOriginals->has($entry->recipe_id);
                                 $ownedRecipeId = $alreadyOwned ? $ownedOriginals->get($entry->recipe_id)->first()?->id : null;
                             @endphp
-                            <div class="flex flex-wrap items-center justify-between gap-2">
-                                <div class="flex flex-col gap-1">
-                                    <div class="group relative inline-block">
-                                        <a class="text-slate-900 hover:text-green-700" href="{{ $entry->recipe ? route('recipes.edit', $entry->recipe) : route('recipes.index') }}" wire:navigate>
-                                            {{ $entry->recipe?->title ?? __('Recipe') }}
-                                        </a>
-                                        <div class="pointer-events-none absolute left-0 top-full z-20 mt-2 hidden w-56 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-900 shadow-sm group-hover:block">
-                                            <div class="font-semibold text-green-950">{{ __('Ingredients') }}</div>
-                                            <ul class="mt-1 list-disc pl-4 text-green-900">
-                                                @forelse ($entry->recipe?->ingredients ?? [] as $ingredient)
-                                                    <li>{{ $ingredient->name }}</li>
-                                                @empty
-                                                    <li>{{ __('No ingredients.') }}</li>
-                                                @endforelse
-                                            </ul>
-                                        </div>
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 py-2 last:border-b-0">
+                                <div class="flex items-start gap-3">
+                                    <div class="h-12 w-14 overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
+                                        @if ($entry->recipe?->cover_thumbnail_url)
+                                            <img
+                                                src="{{ $entry->recipe->cover_thumbnail_url }}"
+                                                alt="{{ $entry->recipe->title }}"
+                                                class="h-full w-full object-cover"
+                                            />
+                                        @else
+                                            <div class="flex h-full w-full items-center justify-center text-lg">
+                                                🥬
+                                            </div>
+                                        @endif
                                     </div>
-                                    <span class="text-xs text-slate-500">
-                                        {{ $entry->recipe?->user?->name ?? __('Unknown') }}
-                                    </span>
+                                    <div class="flex flex-col gap-1">
+                                        <div class="group relative inline-block">
+                                            <a class="text-slate-900 hover:text-green-700" href="{{ $entry->recipe ? route('recipes.edit', $entry->recipe) : route('recipes.index') }}" wire:navigate>
+                                                {{ $entry->recipe?->title ?? __('Recipe') }}
+                                            </a>
+                                            <div class="pointer-events-none absolute left-0 top-full z-20 mt-2 hidden w-56 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-900 shadow-sm group-hover:block">
+                                                <div class="font-semibold text-green-950">{{ __('Ingredients') }}</div>
+                                                <ul class="mt-1 list-disc pl-4 text-green-900">
+                                                    @forelse ($entry->recipe?->ingredients ?? [] as $ingredient)
+                                                        <li>{{ $ingredient->name }}</li>
+                                                    @empty
+                                                        <li>{{ __('No ingredients.') }}</li>
+                                                    @endforelse
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <span class="text-xs text-slate-500">
+                                            {{ $entry->recipe?->user?->name ?? __('Unknown') }}
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="flex items-center gap-2">
                                     <span class="text-xs text-slate-500">{{ $entry->uses }} {{ __('uses') }}</span>

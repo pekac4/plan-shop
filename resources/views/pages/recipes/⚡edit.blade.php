@@ -1,15 +1,20 @@
 <?php
 
+use App\ImageResizer;
 use App\Models\Ingredient;
 use App\Models\Recipe;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\File;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 new class extends Component
 {
     use AuthorizesRequests;
+    use WithFileUploads;
 
     public Recipe $recipe;
     public bool $canEdit = false;
@@ -23,6 +28,7 @@ new class extends Component
     public string $sourceUrl = '';
     public bool $isPublic = false;
     public array $ingredients = [];
+    public $coverImage = null;
 
     public function mount(Recipe $recipe): void
     {
@@ -74,6 +80,7 @@ new class extends Component
             'instructions' => ['required', 'string'],
             'sourceUrl' => ['nullable', 'url'],
             'isPublic' => ['boolean'],
+            'coverImage' => ['nullable', File::image()->max(5 * 1024)],
             'ingredients' => ['array'],
             'ingredients.*.name' => ['required', 'string', 'max:120'],
             'ingredients.*.quantity' => ['nullable', 'numeric', 'min:0'],
@@ -129,6 +136,8 @@ new class extends Component
             $this->recipe->ingredients()->createMany($ingredients);
         }
 
+        $this->storeCoverImage();
+
         $this->dispatch('recipe-updated');
     }
 
@@ -164,6 +173,29 @@ new class extends Component
         $this->recipe->delete();
 
         $this->redirectRoute('recipes.index', navigate: true);
+    }
+
+    public function removeCoverImage(): void
+    {
+        if (! $this->canEdit) {
+            return;
+        }
+
+        $this->authorize('update', $this->recipe);
+
+        $disk = Storage::disk('public');
+        $paths = array_filter([$this->recipe->cover_image_path, $this->recipe->cover_thumbnail_path]);
+
+        if ($paths !== []) {
+            $disk->delete($paths);
+        }
+
+        $this->recipe->forceFill([
+            'cover_image_path' => null,
+            'cover_thumbnail_path' => null,
+        ])->save();
+
+        $this->dispatch('recipe-updated');
     }
 
     /**
@@ -226,6 +258,51 @@ new class extends Component
             })
             ->all();
     }
+
+    protected function storeCoverImage(): void
+    {
+        if (! $this->coverImage) {
+            return;
+        }
+
+        $disk = Storage::disk('public');
+        $directory = 'recipes/'.$this->recipe->id;
+        $extension = strtolower((string) $this->coverImage->getClientOriginalExtension()) ?: 'jpg';
+        $coverPath = $directory.'/cover.'.$extension;
+        $thumbnailPath = $directory.'/cover-thumb.'.$extension;
+
+        $disk->makeDirectory($directory);
+
+        $sourcePath = $this->coverImage->getRealPath();
+        $coverFullPath = $disk->path($coverPath);
+        $thumbnailFullPath = $disk->path($thumbnailPath);
+
+        $coverSaved = $sourcePath
+            ? ImageResizer::resizeToFit($sourcePath, $coverFullPath, 1600, 1200)
+            : false;
+
+        $thumbSaved = $sourcePath
+            ? ImageResizer::resizeToFit($sourcePath, $thumbnailFullPath, 420, 320)
+            : false;
+
+        if (! $coverSaved) {
+            $disk->putFileAs($directory, $this->coverImage, 'cover.'.$extension);
+        }
+
+        if (! $thumbSaved) {
+            $disk->copy($coverPath, $thumbnailPath);
+        }
+
+        $oldPaths = array_filter([$this->recipe->cover_image_path, $this->recipe->cover_thumbnail_path]);
+        if ($oldPaths !== []) {
+            $disk->delete($oldPaths);
+        }
+
+        $this->recipe->forceFill([
+            'cover_image_path' => $coverPath,
+            'cover_thumbnail_path' => $thumbnailPath,
+        ])->save();
+    }
 };
 ?>
 
@@ -274,6 +351,44 @@ new class extends Component
             </div>
 
             <x-ui.textarea wire:model="description" name="description" :label="__('Description')" rows="3" :disabled="! $canEdit" />
+
+            <div class="grid gap-4 md:grid-cols-2">
+                <x-ui.input
+                    wire:model="coverImage"
+                    name="coverImage"
+                    :label="__('Cover image')"
+                    type="file"
+                    accept="image/*"
+                    :disabled="! $canEdit"
+                />
+                <div class="flex items-center text-sm text-slate-500">
+                    {{ __('Optional. We will resize the image for a clean cover and thumbnail.') }}
+                </div>
+            </div>
+
+            @if ($coverImage)
+                <img
+                    src="{{ $coverImage->temporaryUrl() }}"
+                    alt="{{ __('Cover preview') }}"
+                    class="h-48 w-full rounded-xl object-cover"
+                />
+            @elseif ($recipe->cover_image_url)
+                <a href="{{ $recipe->cover_image_url }}" class="block" target="_blank" rel="noopener">
+                    <img
+                        src="{{ $recipe->cover_image_url }}"
+                        alt="{{ __('Cover image') }}"
+                        class="h-48 w-full rounded-xl object-cover"
+                    />
+                </a>
+            @endif
+
+            @if ($canEdit && $recipe->cover_image_path)
+                <div>
+                    <x-ui.button size="sm" variant="danger" type="button" wire:click="removeCoverImage">
+                        {{ __('Remove cover image') }}
+                    </x-ui.button>
+                </div>
+            @endif
 
             <div class="grid gap-4 md:grid-cols-3">
                 <x-ui.input wire:model="servings" name="servings" :label="__('Servings')" type="number" min="1" max="50" :disabled="! $canEdit" />
