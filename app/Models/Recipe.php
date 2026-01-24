@@ -19,6 +19,7 @@ class Recipe extends Model
      */
     protected $fillable = [
         'user_id',
+        'original_recipe_id',
         'title',
         'description',
         'servings',
@@ -52,6 +53,16 @@ class Recipe extends Model
     public function ingredients(): HasMany
     {
         return $this->hasMany(Ingredient::class);
+    }
+
+    public function originalRecipe(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'original_recipe_id');
+    }
+
+    public function copies(): HasMany
+    {
+        return $this->hasMany(self::class, 'original_recipe_id');
     }
 
     public function getApproximatePriceAttribute(): float

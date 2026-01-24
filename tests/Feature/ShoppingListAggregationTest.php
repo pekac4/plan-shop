@@ -20,24 +20,28 @@ it('aggregates shopping list items by name and unit', function () {
         'name' => 'Tomato',
         'quantity' => 2,
         'unit' => 'pcs',
+        'price' => 1.0,
     ]);
 
     Ingredient::factory()->for($recipeTwo)->create([
         'name' => 'tomato ',
         'quantity' => 1.5,
         'unit' => 'pcs',
+        'price' => 1.0,
     ]);
 
     Ingredient::factory()->for($recipeTwo)->create([
         'name' => 'Tomato',
         'quantity' => null,
         'unit' => 'pcs',
+        'price' => 1.0,
     ]);
 
     Ingredient::factory()->for($recipeTwo)->create([
         'name' => 'Tomato',
         'quantity' => 2,
         'unit' => 'g',
+        'price' => 1.0,
     ]);
 
     MealPlanEntry::factory()->forRecipe($recipeOne, servings: 2)->create([
@@ -72,13 +76,13 @@ it('aggregates shopping list items by name and unit', function () {
     $tomatoesGrams = collect($items)->firstWhere(fn (array $item) => $item['unit'] === 'g');
 
     expect($tomatoes['display_quantity'])->toBe('5.5')
-        ->and($tomatoes['price'])->toBe('0')
+        ->and($tomatoes['price'])->toBe('5.5')
         ->and($tomatoes['source_recipes_count'])->toBe(2);
 
     expect($tomatoesNull['display_quantity'])->toBeNull()
-        ->and($tomatoesNull['price'])->toBe('0');
+        ->and($tomatoesNull['price'])->toBe('1');
 
     expect($tomatoesGrams['display_quantity'])->toBe('2')
-        ->and($tomatoesGrams['price'])->toBe('0')
+        ->and($tomatoesGrams['price'])->toBe('2')
         ->and($tomatoesGrams['source_recipes_count'])->toBe(1);
 });

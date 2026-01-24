@@ -104,5 +104,6 @@ test('dashboard shows last month summaries', function () {
     $response->assertSee('Pasta');
     $response->assertSee('Egg');
     $response->assertSee('Public Stew');
+    $response->assertSee($otherUser->name);
     $response->assertSee('Approx. $20.5');
 });

@@ -42,6 +42,12 @@
         $displayTotal = rtrim(rtrim(number_format($monthlyTotal, 2, '.', ''), '0'), '.');
         $monthLabel = $monthStart->format('F Y');
 
+        $ownedOriginals = \App\Models\Recipe::query()
+            ->where('user_id', \Illuminate\Support\Facades\Auth::id())
+            ->whereNotNull('original_recipe_id')
+            ->get(['id', 'original_recipe_id'])
+            ->groupBy('original_recipe_id');
+
         $topCommunityRecipes = \App\Models\MealPlanEntry::query()
             ->whereBetween('date', [$monthStart->toDateString(), $monthEnd->toDateString()])
             ->whereNotNull('recipe_id')
@@ -53,7 +59,14 @@
             ->selectRaw('count(*) as uses')
             ->groupBy('recipe_id')
             ->orderByDesc('uses')
-            ->with('recipe:id,title,is_public,user_id')
+            ->with([
+                'recipe' => function ($query): void {
+                    $query->select('id', 'title', 'is_public', 'user_id')
+                        ->withCount('copies')
+                        ->with('ingredients:id,recipe_id,name');
+                },
+                'recipe.user:id,name',
+            ])
             ->limit(5)
             ->get();
     @endphp
@@ -142,14 +155,57 @@
                     </div>
                     <div class="grid gap-2 text-sm text-slate-700">
                         @forelse ($topCommunityRecipes as $entry)
-                            <div class="flex items-center justify-between gap-2">
-                                <a class="text-slate-900 hover:text-green-700" href="{{ $entry->recipe ? route('recipes.edit', $entry->recipe) : route('recipes.index') }}" wire:navigate>
-                                    {{ $entry->recipe?->title ?? __('Recipe') }}
-                                </a>
-                                <span class="text-xs text-slate-500">{{ $entry->uses }} {{ __('uses') }}</span>
+                            @php
+                                $alreadyOwned = $ownedOriginals->has($entry->recipe_id);
+                                $ownedRecipeId = $alreadyOwned ? $ownedOriginals->get($entry->recipe_id)->first()?->id : null;
+                            @endphp
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <div class="flex flex-col gap-1">
+                                    <div class="group relative inline-block">
+                                        <a class="text-slate-900 hover:text-green-700" href="{{ $entry->recipe ? route('recipes.edit', $entry->recipe) : route('recipes.index') }}" wire:navigate>
+                                            {{ $entry->recipe?->title ?? __('Recipe') }}
+                                        </a>
+                                        <div class="pointer-events-none absolute left-0 top-full z-20 mt-2 hidden w-56 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-900 shadow-sm group-hover:block">
+                                            <div class="font-semibold text-green-950">{{ __('Ingredients') }}</div>
+                                            <ul class="mt-1 list-disc pl-4 text-green-900">
+                                                @forelse ($entry->recipe?->ingredients ?? [] as $ingredient)
+                                                    <li>{{ $ingredient->name }}</li>
+                                                @empty
+                                                    <li>{{ __('No ingredients.') }}</li>
+                                                @endforelse
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <span class="text-xs text-slate-500">
+                                        {{ $entry->recipe?->user?->name ?? __('Unknown') }}
+                                    </span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs text-slate-500">{{ $entry->uses }} {{ __('uses') }}</span>
+                                    <span class="inline-flex items-center gap-1 text-xs text-slate-500">
+                                        <svg class="h-4 w-4 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M9.05 2.927c.3-.921 1.603-.921 1.902 0l1.12 3.44a1 1 0 0 0 .95.69h3.62c.969 0 1.371 1.24.588 1.81l-2.93 2.128a1 1 0 0 0-.364 1.118l1.12 3.44c.3.922-.755 1.688-1.54 1.118l-2.93-2.127a1 1 0 0 0-1.175 0l-2.93 2.127c-.784.57-1.838-.196-1.539-1.118l1.12-3.44a1 1 0 0 0-.364-1.118L2.72 8.867c-.783-.57-.38-1.81.588-1.81h3.62a1 1 0 0 0 .95-.69l1.12-3.44Z" clip-rule="evenodd" />
+                                        </svg>
+                                        {{ $entry->recipe?->copies_count ?? 0 }}
+                                    </span>
+                                    @if ($entry->recipe)
+                                        @if ($alreadyOwned && $ownedRecipeId)
+                                            <a class="text-xs font-medium text-slate-500 hover:text-green-700" href="{{ route('recipes.edit', $ownedRecipeId) }}" wire:navigate>
+                                                {{ __('Already in my book') }}
+                                            </a>
+                                        @else
+                                        <form method="POST" action="{{ route('recipes.add-to-library', $entry->recipe) }}">
+                                            @csrf
+                                            <x-ui.button size="sm" variant="secondary" type="submit">
+                                                {{ __('Add to my recipe book') }}
+                                            </x-ui.button>
+                                        </form>
+                                        @endif
+                                    @endif
+                                </div>
                             </div>
                         @empty
-                            <p class="text-sm text-slate-500">{{ __('No public recipes used last month.') }}</p>
+                            <p class="text-sm text-slate-500">{{ __('No public recipes yet.') }}</p>
                         @endforelse
                     </div>
                 </div>

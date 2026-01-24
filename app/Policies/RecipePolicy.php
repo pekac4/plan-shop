@@ -49,7 +49,7 @@ class RecipePolicy
 
     public function duplicate(User $user, Recipe $recipe): bool
     {
-        return $recipe->user_id === $user->id;
+        return $recipe->user_id === $user->id || $recipe->is_public;
     }
 
     /**

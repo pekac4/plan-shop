@@ -28,8 +28,12 @@ new class extends Component
     {
         $this->authorize('view', $recipe);
 
-        $this->recipe = $recipe;
+        $this->recipe = $recipe->loadMissing('originalRecipe.user');
         $this->canEdit = Gate::allows('update', $recipe);
+
+        if ($recipe->original_recipe_id) {
+            $this->canEdit = false;
+        }
 
         $this->title = $recipe->title;
         $this->description = $recipe->description ?? '';
@@ -225,8 +229,17 @@ new class extends Component
         <div class="space-y-1">
             <h1 class="text-2xl font-semibold text-slate-900">{{ $recipe->title }}</h1>
             <p class="text-sm text-slate-600">
-                {{ $canEdit ? __('Edit your recipe details.') : __('Viewing a public recipe.') }}
+                @if ($recipe->originalRecipe)
+                    {{ __('Viewing a copied recipe.') }}
+                @else
+                    {{ $canEdit ? __('Edit your recipe details.') : __('Viewing a public recipe.') }}
+                @endif
             </p>
+            @if ($recipe->originalRecipe)
+                <p class="text-xs text-slate-500">
+                    {{ __('Original by') }} {{ $recipe->originalRecipe->user?->name ?? __('Unknown') }}
+                </p>
+            @endif
             <p class="text-sm text-slate-600">
                 {{ __('Approx.') }} ${{ number_format($recipe->approximate_price, 2) }}
             </p>

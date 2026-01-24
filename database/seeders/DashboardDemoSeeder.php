@@ -36,7 +36,20 @@ class DashboardDemoSeeder extends Seeder
                 ->exists();
 
             if ($hasEntries) {
-                return;
+                if ($primaryUserId && $user->id !== $primaryUserId) {
+                    $hasPublicUsage = MealPlanEntry::query()
+                        ->where('user_id', $user->id)
+                        ->whereBetween('date', [$monthStart->toDateString(), $monthEnd->toDateString()])
+                        ->whereNotNull('recipe_id')
+                        ->whereHas('recipe', fn ($query) => $query->where('is_public', true))
+                        ->exists();
+
+                    if ($hasPublicUsage) {
+                        return;
+                    }
+                } else {
+                    return;
+                }
             }
 
             $recipes = Recipe::factory()
@@ -78,5 +91,26 @@ class DashboardDemoSeeder extends Seeder
                 }
             }
         });
+
+        $otherUser = $users->firstWhere(fn (User $user) => $user->id !== $primaryUserId);
+
+        if ($otherUser) {
+            $publicRecipe = Recipe::query()
+                ->where('user_id', $otherUser->id)
+                ->where('is_public', true)
+                ->first();
+
+            if ($publicRecipe) {
+                Recipe::factory()
+                    ->for($otherUser)
+                    ->count(3)
+                    ->create([
+                        'original_recipe_id' => $publicRecipe->id,
+                        'title' => 'Copy of '.$publicRecipe->title,
+                        'is_public' => false,
+                        'created_at' => $monthStart->addDays(2),
+                    ]);
+            }
+        }
     }
 }

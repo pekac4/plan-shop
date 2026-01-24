@@ -14,7 +14,6 @@ new class extends Component
 
     public string $search = '';
     public string $visibility = 'all';
-    public bool $includePublic = false;
     public string $ingredient = '';
 
     public function mount(): void
@@ -32,11 +31,6 @@ new class extends Component
         $this->resetPage();
     }
 
-    public function updatingIncludePublic(): void
-    {
-        $this->resetPage();
-    }
-
     public function updatingIngredient(): void
     {
         $this->resetPage();
@@ -47,16 +41,10 @@ new class extends Component
     {
         $user = Auth::user();
 
-        $query = Recipe::query()->withCount('ingredients')->with('ingredients');
-
-        if ($this->includePublic) {
-            $query->where(function ($builder) use ($user): void {
-                $builder->where('user_id', $user->id)
-                    ->orWhere('is_public', true);
-            });
-        } else {
-            $query->where('user_id', $user->id);
-        }
+        $query = Recipe::query()
+            ->withCount('ingredients')
+            ->with(['ingredients', 'user:id,name', 'originalRecipe.user:id,name'])
+            ->where('user_id', $user->id);
 
         if ($this->visibility === 'public') {
             $query->where('is_public', true);
@@ -166,16 +154,7 @@ new class extends Component
                 @enderror
             </div>
 
-            <div class="flex items-end">
-                <label class="inline-flex items-center gap-2 text-sm text-slate-700">
-                    <input
-                        type="checkbox"
-                        wire:model.live="includePublic"
-                        class="h-4 w-4 rounded border-slate-300 text-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-                    />
-                    {{ __('Include public recipes') }}
-                </label>
-            </div>
+            <div class="hidden md:block"></div>
         </div>
 
         <div class="grid gap-4">
@@ -184,10 +163,21 @@ new class extends Component
                     <div class="flex flex-wrap items-start justify-between gap-3">
                         <div class="space-y-2">
                             <div>
-                                <h2 class="text-lg font-semibold text-slate-900">{{ $recipe->title }}</h2>
+                                <a class="text-lg font-semibold text-slate-900 hover:text-green-700" href="{{ route('recipes.edit', $recipe) }}" wire:navigate>
+                                    {{ $recipe->title }}
+                                </a>
                                 <p class="text-sm text-slate-600">
                                     {{ $recipe->servings }} {{ __('servings') }} · {{ $recipe->ingredients_count }} {{ __('ingredients') }}
                                 </p>
+                                @if ($recipe->originalRecipe)
+                                    <p class="text-xs text-slate-500">
+                                        {{ __('Original by') }} {{ $recipe->originalRecipe->user?->name ?? __('Unknown') }}
+                                    </p>
+                                @elseif ($recipe->user_id !== Auth::id())
+                                    <p class="text-xs text-slate-500">
+                                        {{ __('By') }} {{ $recipe->user?->name ?? __('Unknown') }}
+                                    </p>
+                                @endif
                                 <p class="text-sm text-slate-600">
                                     {{ __('Approx.') }} ${{ number_format($recipe->approximate_price, 2) }}
                                 </p>
