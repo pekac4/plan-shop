@@ -13,6 +13,7 @@ new class extends Component
 
     public string $rangeStart = '';
     public string $rangeEnd = '';
+    public string $totalPrice = '0.00';
 
     /**
      * @var array<int, array{id: int, name: string, unit: string|null, quantity: string|null, display_quantity: string|null, price: string|null, checked_at: string|null, source_recipes_count: int}>
@@ -50,6 +51,13 @@ new class extends Component
             CarbonImmutable::parse($validated['rangeStart']),
             CarbonImmutable::parse($validated['rangeEnd']),
         );
+
+        $total = collect($this->items)
+            ->sum(function (array $item): float {
+                return (float) ($item['price'] ?? 0);
+            });
+
+        $this->totalPrice = number_format($total, 2, '.', '');
     }
 
     public function toggleItem(int $itemId): void
@@ -93,6 +101,11 @@ new class extends Component
                     {{ __('Generate') }}
                 </x-ui.button>
             </div>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4 text-sm text-slate-600">
+            <span>{{ __('Total for range') }}</span>
+            <span class="font-semibold text-slate-900">{{ __('Approx.') }} ${{ rtrim(rtrim($totalPrice, '0'), '.') }}</span>
         </div>
 
         <div class="grid gap-3">
