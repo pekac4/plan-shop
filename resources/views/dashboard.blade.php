@@ -61,7 +61,7 @@
             ->orderByDesc('uses')
             ->with([
                 'recipe' => function ($query): void {
-                    $query->select('id', 'title', 'is_public', 'user_id')
+                    $query->select('id', 'title', 'is_public', 'user_id', 'cover_image_path', 'cover_thumbnail_path')
                         ->withCount('copies')
                         ->with('ingredients:id,recipe_id,name');
                 },
@@ -162,12 +162,14 @@
                             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 py-2 last:border-b-0">
                                 <div class="flex items-start gap-3">
                                     <div class="h-12 w-14 overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
-                                        @if ($entry->recipe?->cover_thumbnail_url)
-                                            <img
-                                                src="{{ $entry->recipe->cover_thumbnail_url }}"
-                                                alt="{{ $entry->recipe->title }}"
-                                                class="h-full w-full object-cover"
-                                            />
+                                        @if ($entry->recipe?->cover_thumbnail_url && $entry->recipe?->cover_image_url)
+                                            <a href="#community-recipe-image-{{ $entry->recipe->id }}" class="block h-full w-full">
+                                                <img
+                                                    src="{{ $entry->recipe->cover_thumbnail_url }}"
+                                                    alt="{{ $entry->recipe->title }}"
+                                                    class="h-full w-full object-cover"
+                                                />
+                                            </a>
                                         @else
                                             <div class="flex h-full w-full items-center justify-center text-lg">
                                                 🥬
@@ -195,6 +197,28 @@
                                         </span>
                                     </div>
                                 </div>
+                                @if ($entry->recipe?->cover_image_url)
+                                    <div
+                                        id="community-recipe-image-{{ $entry->recipe->id }}"
+                                        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/40 p-6 target:flex"
+                                    >
+                                        <a class="absolute inset-0" href="#"></a>
+                                        <div class="relative max-h-[85vh] w-full max-w-4xl">
+                                            <img
+                                                src="{{ $entry->recipe->cover_image_url }}"
+                                                alt="{{ $entry->recipe->title }}"
+                                                class="h-full w-full rounded-2xl object-contain shadow-lg"
+                                            />
+                                            <a
+                                                href="#"
+                                                class="absolute -top-4 -right-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 shadow hover:text-slate-900"
+                                                aria-label="{{ __('Close') }}"
+                                            >
+                                                ✕
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endif
                                 <div class="flex items-center gap-2">
                                     <span class="text-xs text-slate-500">{{ $entry->uses }} {{ __('uses') }}</span>
                                     <span class="inline-flex items-center gap-1 text-xs text-slate-500">
