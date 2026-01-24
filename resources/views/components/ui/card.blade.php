@@ -1,0 +1,7 @@
+@props([
+    'as' => 'div',
+])
+
+<{{ $as }} {{ $attributes->merge(['class' => 'bg-white border border-slate-200 rounded-2xl shadow-sm']) }}>
+    {{ $slot }}
+</{{ $as }}>
