@@ -15,6 +15,12 @@ new class extends Component
     public string $search = '';
     public string $visibility = 'all';
     public bool $includePublic = false;
+    public string $ingredient = '';
+
+    public function mount(): void
+    {
+        $this->ingredient = (string) request()->query('ingredient', '');
+    }
 
     public function updatingSearch(): void
     {
@@ -27,6 +33,11 @@ new class extends Component
     }
 
     public function updatingIncludePublic(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingIngredient(): void
     {
         $this->resetPage();
     }
@@ -57,6 +68,13 @@ new class extends Component
 
         if (trim($this->search) !== '') {
             $query->where('title', 'like', '%'.trim($this->search).'%');
+        }
+
+        if (trim($this->ingredient) !== '') {
+            $ingredient = trim($this->ingredient);
+            $query->whereHas('ingredients', function ($builder) use ($ingredient): void {
+                $builder->where('name', 'like', '%'.$ingredient.'%');
+            });
         }
 
         return $query
