@@ -34,6 +34,7 @@ it('allows users to add a public recipe to their library', function () {
 
     expect($copy)->not()->toBeNull();
     expect($copy->original_recipe_id)->toBe($recipe->id);
+    expect($copy->is_public)->toBeTrue();
 
     $this->actingAs($user)
         ->post(route('recipes.add-to-library', $recipe))

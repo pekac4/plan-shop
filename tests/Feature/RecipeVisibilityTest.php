@@ -20,9 +20,27 @@ it('shows only owned recipes on the recipes index', function () {
         'is_public' => true,
     ]);
 
+    $original = Recipe::factory()->for($other)->create([
+        'title' => 'Original Recipe',
+        'is_public' => true,
+    ]);
+
+    Recipe::factory()->for($user)->create([
+        'title' => 'My Copy of Mine',
+        'original_recipe_id' => $owned->id,
+        'is_public' => true,
+    ]);
+
+    Recipe::factory()->for($user)->create([
+        'title' => 'Copied Recipe',
+        'original_recipe_id' => $original->id,
+        'is_public' => true,
+    ]);
+
     $this->actingAs($user)
         ->get(route('recipes.index'))
         ->assertOk()
         ->assertSee($owned->title)
+        ->assertSee('Copied Recipe')
         ->assertDontSee('Public Recipe');
 });

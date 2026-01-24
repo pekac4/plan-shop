@@ -136,16 +136,21 @@ new class extends Component
     {
         $this->authorize('duplicate', $this->recipe);
 
+        $isFromOther = $this->recipe->user_id !== Auth::id();
+
         $copy = $this->recipe->replicate(['is_public']);
+        if ($isFromOther) {
+            $copy->original_recipe_id = $this->recipe->original_recipe_id ?? $this->recipe->id;
+        }
         $copy->user_id = Auth::id();
-        $copy->title = 'Copy of '.$this->recipe->title;
-        $copy->is_public = false;
+        $copy->title = $this->recipe->title;
+        $copy->is_public = $isFromOther ? true : $this->recipe->is_public;
         $copy->save();
 
         $copy->ingredients()->createMany(
             $this->recipe->ingredients()
                 ->get()
-                ->map(fn ($ingredient) => $ingredient->only(['name', 'quantity', 'unit', 'note']))
+                ->map(fn ($ingredient) => $ingredient->only(['name', 'quantity', 'unit', 'note', 'price']))
                 ->all(),
         );
 

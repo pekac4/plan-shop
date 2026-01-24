@@ -30,7 +30,7 @@ class RecipeLibraryController extends Controller
         $copy->original_recipe_id = $originalId;
         $copy->user_id = Auth::id();
         $copy->title = $recipe->title;
-        $copy->is_public = false;
+        $copy->is_public = true;
         $copy->save();
 
         $copy->ingredients()->createMany(

@@ -15,6 +15,7 @@ new class extends Component
     public string $search = '';
     public string $visibility = 'all';
     public string $ingredient = '';
+    public string $ownership = 'all';
 
     public function mount(): void
     {
@@ -27,6 +28,11 @@ new class extends Component
     }
 
     public function updatingVisibility(): void
+    {
+        $this->resetPage();
+    }
+
+    public function updatingOwnership(): void
     {
         $this->resetPage();
     }
@@ -46,12 +52,26 @@ new class extends Component
             ->with(['ingredients', 'user:id,name', 'originalRecipe.user:id,name'])
             ->where('user_id', $user->id);
 
-        if ($this->visibility === 'public') {
-            $query->where('is_public', true);
+        if ($this->ownership === 'mine') {
+            $query->whereNull('original_recipe_id');
         }
 
-        if ($this->visibility === 'private') {
-            $query->where('is_public', false);
+        if ($this->ownership === 'copied') {
+            $query->whereNotNull('original_recipe_id')
+                ->whereHas('originalRecipe', function ($builder) use ($user): void {
+                    $builder->where('user_id', '!=', $user->id);
+                });
+        }
+
+        if ($this->ownership !== 'copied') {
+            if ($this->visibility === 'public') {
+                $query->where('is_public', true);
+            }
+
+            if ($this->visibility === 'private') {
+                $query->where('is_public', false)
+                    ->whereNull('original_recipe_id');
+            }
         }
 
         if (trim($this->search) !== '') {
@@ -86,15 +106,20 @@ new class extends Component
 
         $this->authorize('duplicate', $recipe);
 
+        $isFromOther = $recipe->user_id !== Auth::id();
+
         $copy = $recipe->replicate(['is_public']);
+        if ($isFromOther) {
+            $copy->original_recipe_id = $recipe->original_recipe_id ?? $recipe->id;
+        }
         $copy->user_id = Auth::id();
-        $copy->title = 'Copy of '.$recipe->title;
-        $copy->is_public = false;
+        $copy->title = $recipe->title;
+        $copy->is_public = $isFromOther ? true : $recipe->is_public;
         $copy->save();
 
         $copy->ingredients()->createMany(
             $recipe->ingredients
-                ->map(fn ($ingredient) => $ingredient->only(['name', 'quantity', 'unit', 'note']))
+                ->map(fn ($ingredient) => $ingredient->only(['name', 'quantity', 'unit', 'note', 'price']))
                 ->all(),
         );
 
@@ -150,6 +175,23 @@ new class extends Component
                     <option value="private">{{ __('Private') }}</option>
                 </select>
                 @error('visibility')
+                    <p class="text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+
+            <div class="grid gap-1">
+                <label class="text-sm font-medium text-slate-700" for="ownership">{{ __('Ownership') }}</label>
+                <select
+                    id="ownership"
+                    name="ownership"
+                    wire:model.live="ownership"
+                    class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                >
+                    <option value="all">{{ __('All') }}</option>
+                    <option value="mine">{{ __('Mine') }}</option>
+                    <option value="copied">{{ __('From others') }}</option>
+                </select>
+                @error('ownership')
                     <p class="text-sm text-red-600">{{ $message }}</p>
                 @enderror
             </div>
