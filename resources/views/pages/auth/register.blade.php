@@ -17,6 +17,7 @@
                 autofocus
                 autocomplete="name"
                 :placeholder="__('Full name')"
+                class:input="border-emerald-200 border-b-emerald-300/70 focus:border-emerald-300 focus-visible:outline-emerald-300"
             />
 
             <!-- Email Address -->
@@ -28,6 +29,7 @@
                 required
                 autocomplete="email"
                 placeholder="email@example.com"
+                class:input="border-emerald-200 border-b-emerald-300/70 focus:border-emerald-300 focus-visible:outline-emerald-300"
             />
 
             <!-- Password -->
@@ -39,6 +41,7 @@
                 autocomplete="new-password"
                 :placeholder="__('Password')"
                 viewable
+                class:input="border-emerald-200 border-b-emerald-300/70 focus:border-emerald-300 focus-visible:outline-emerald-300"
             />
 
             <!-- Confirm Password -->
@@ -50,18 +53,19 @@
                 autocomplete="new-password"
                 :placeholder="__('Confirm password')"
                 viewable
+                class:input="border-emerald-200 border-b-emerald-300/70 focus:border-emerald-300 focus-visible:outline-emerald-300"
             />
 
             <div class="flex items-center justify-end">
-                <flux:button type="submit" variant="primary" class="w-full" data-test="register-user-button">
+                <x-ui.button type="submit" variant="primary" class="w-full" data-test="register-user-button">
                     {{ __('Create account') }}
-                </flux:button>
+                </x-ui.button>
             </div>
         </form>
 
         <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
             <span>{{ __('Already have an account?') }}</span>
-            <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
+            <flux:link :href="route('login')">{{ __('Log in') }}</flux:link>
         </div>
     </div>
 </x-layouts::auth>

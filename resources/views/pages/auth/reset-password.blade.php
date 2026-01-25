@@ -18,6 +18,7 @@
                 type="email"
                 required
                 autocomplete="email"
+                class:input="border-emerald-200 border-b-emerald-300/70 focus:border-emerald-300 focus-visible:outline-emerald-300"
             />
 
             <!-- Password -->
@@ -29,6 +30,7 @@
                 autocomplete="new-password"
                 :placeholder="__('Password')"
                 viewable
+                class:input="border-emerald-200 border-b-emerald-300/70 focus:border-emerald-300 focus-visible:outline-emerald-300"
             />
 
             <!-- Confirm Password -->
@@ -40,12 +42,13 @@
                 autocomplete="new-password"
                 :placeholder="__('Confirm password')"
                 viewable
+                class:input="border-emerald-200 border-b-emerald-300/70 focus:border-emerald-300 focus-visible:outline-emerald-300"
             />
 
             <div class="flex items-center justify-end">
-                <flux:button type="submit" variant="primary" class="w-full" data-test="reset-password-button">
+                <x-ui.button type="submit" variant="primary" class="w-full" data-test="reset-password-button">
                     {{ __('Reset password') }}
-                </flux:button>
+                </x-ui.button>
             </div>
         </form>
     </div>

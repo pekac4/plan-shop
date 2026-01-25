@@ -369,7 +369,7 @@ new class extends Component
                     <div class="space-y-3">
                         <div class="text-3xl" aria-hidden="true">🥬</div>
                         <p class="text-sm text-slate-600">{{ __('No items yet. Add meals to your plan and generate a list.') }}</p>
-                        <x-ui.button variant="primary" :href="route('meal-plan.index')" wire:navigate>
+                        <x-ui.button variant="primary" :href="route('meal-plan.index')">
                             {{ __('Plan meals') }}
                         </x-ui.button>
                     </div>

@@ -137,14 +137,14 @@ new class extends Component
             </p>
         </div>
 
-        <x-ui.button variant="primary" :href="route('recipes.create')" wire:navigate data-test="recipes-create">
+        <x-ui.button variant="primary" :href="route('recipes.create')" data-test="recipes-create">
             {{ __('Create Recipe') }}
         </x-ui.button>
     </div>
 
     <x-ui.card class="p-6 space-y-4">
         <div class="flex justify-end">
-            <x-ui.button variant="primary" :href="route('recipes.create')" wire:navigate data-test="recipes-create-secondary">
+            <x-ui.button variant="primary" :href="route('recipes.create')" data-test="recipes-create-secondary">
                 {{ __('Create Recipe') }}
             </x-ui.button>
         </div>
@@ -209,7 +209,7 @@ new class extends Component
                             </div>
                             <div class="space-y-2">
                                 <div>
-                                    <a class="text-lg font-semibold text-slate-900 hover:text-green-700" href="{{ route('recipes.edit', $recipe) }}" wire:navigate>
+                                    <a class="text-lg font-semibold text-slate-900 hover:text-green-700" href="{{ route('recipes.edit', $recipe) }}">
                                         {{ $recipe->title }}
                                     </a>
                                     <p class="text-sm text-slate-600">
@@ -245,16 +245,16 @@ new class extends Component
 
                         <div class="flex flex-wrap items-center gap-2">
                             @if ($isCopiedFromOther)
-                                <x-ui.button size="sm" variant="secondary" :href="route('recipes.edit', $recipe)" wire:navigate>
+                                <x-ui.button size="sm" variant="secondary" :href="route('recipes.edit', $recipe)">
                                     {{ __('View') }}
                                 </x-ui.button>
                             @else
                                 @can('update', $recipe)
-                                    <x-ui.button size="sm" variant="edit" :href="route('recipes.edit', $recipe)" wire:navigate>
+                                    <x-ui.button size="sm" variant="edit" :href="route('recipes.edit', $recipe)">
                                         {{ __('Edit') }}
                                     </x-ui.button>
                                 @else
-                                    <x-ui.button size="sm" variant="secondary" :href="route('recipes.edit', $recipe)" wire:navigate>
+                                    <x-ui.button size="sm" variant="secondary" :href="route('recipes.edit', $recipe)">
                                         {{ __('View') }}
                                     </x-ui.button>
                                 @endcan
@@ -287,7 +287,7 @@ new class extends Component
                     <div class="space-y-3">
                         <div class="text-3xl" aria-hidden="true">🥬</div>
                         <p class="text-sm text-slate-600">{{ __('No recipes yet.') }}</p>
-                        <x-ui.button variant="primary" :href="route('recipes.create')" wire:navigate data-test="recipes-create-empty">
+                        <x-ui.button variant="primary" :href="route('recipes.create')" data-test="recipes-create-empty">
                             {{ __('Create Recipe') }}
                         </x-ui.button>
                     </div>

@@ -15,6 +15,10 @@ class RecipeLibraryController extends Controller
     {
         $this->authorize('duplicate', $recipe);
 
+        if ($recipe->user_id === Auth::id()) {
+            return redirect()->back();
+        }
+
         $originalId = $recipe->original_recipe_id ?? $recipe->id;
 
         $existing = Recipe::query()

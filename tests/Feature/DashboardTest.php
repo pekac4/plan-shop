@@ -98,6 +98,35 @@ test('dashboard shows last month summaries', function () {
         'meal' => 'dinner',
     ]);
 
+    $starChefOne = User::factory()->create(['name' => 'Ava Chef']);
+    $starChefTwo = User::factory()->create(['name' => 'Ben Chef']);
+
+    $starRecipeOne = Recipe::factory()->for($starChefOne)->create([
+        'title' => 'Star Salad',
+        'is_public' => true,
+    ]);
+
+    $starRecipeTwo = Recipe::factory()->for($starChefTwo)->create([
+        'title' => 'Star Soup',
+        'is_public' => true,
+    ]);
+
+    Recipe::factory()->for($user)->create([
+        'original_recipe_id' => $starRecipeOne->id,
+    ]);
+
+    Recipe::factory()->for($otherUser)->create([
+        'original_recipe_id' => $starRecipeOne->id,
+    ]);
+
+    Recipe::factory()->for($starChefOne)->create([
+        'original_recipe_id' => $starRecipeOne->id,
+    ]);
+
+    Recipe::factory()->for($user)->create([
+        'original_recipe_id' => $starRecipeTwo->id,
+    ]);
+
     $response = $this->get(route('dashboard'));
 
     $response->assertOk();
@@ -105,5 +134,32 @@ test('dashboard shows last month summaries', function () {
     $response->assertSee('Egg');
     $response->assertSee('Public Stew');
     $response->assertSee($otherUser->name);
+    $response->assertSee('Ava Chef');
+    $response->assertSee('Ben Chef');
+    $response->assertSee('Star Salad');
+    $response->assertSee('Star Soup');
+    $starOneCount = Recipe::query()
+        ->selectSub(function ($subQuery): void {
+            $subQuery->from('recipes as copies')
+                ->selectRaw('count(distinct copies.user_id)')
+                ->whereColumn('copies.original_recipe_id', 'recipes.id')
+                ->whereColumn('copies.user_id', '!=', 'recipes.user_id');
+        }, 'stars')
+        ->whereKey($starRecipeOne->id)
+        ->value('stars');
+
+    $starTwoCount = Recipe::query()
+        ->selectSub(function ($subQuery): void {
+            $subQuery->from('recipes as copies')
+                ->selectRaw('count(distinct copies.user_id)')
+                ->whereColumn('copies.original_recipe_id', 'recipes.id')
+                ->whereColumn('copies.user_id', '!=', 'recipes.user_id');
+        }, 'stars')
+        ->whereKey($starRecipeTwo->id)
+        ->value('stars');
+
+    expect((int) $starOneCount)->toBe(2);
+    expect((int) $starTwoCount)->toBe(1);
     $response->assertSee('Approx. $20.5');
+    $response->assertSee('md:col-span-3');
 });

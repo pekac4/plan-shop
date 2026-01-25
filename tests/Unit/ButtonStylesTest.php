@@ -11,8 +11,8 @@ it('renders button variants with consistent colors', function () {
     $danger = Blade::render('<x-ui.button variant="danger">Delete</x-ui.button>');
     $success = Blade::render('<x-ui.button variant="success">Add to my recipe book</x-ui.button>');
 
-    expect($add)->toContain('bg-blue-400')
-        ->and($edit)->toContain('bg-amber-300')
-        ->and($danger)->toContain('bg-red-400')
-        ->and($success)->toContain('bg-green-400');
+    expect($add)->toContain('bg-emerald-100')
+        ->and($edit)->toContain('bg-amber-100')
+        ->and($danger)->toContain('bg-rose-100')
+        ->and($success)->toContain('bg-emerald-100');
 });
