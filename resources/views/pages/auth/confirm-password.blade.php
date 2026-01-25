@@ -18,9 +18,15 @@
                 autocomplete="current-password"
                 :placeholder="__('Password')"
                 viewable
+                class:input="border-emerald-200 border-b-emerald-300/70 focus:border-emerald-300 focus-visible:outline-emerald-300"
             />
 
-            <flux:button variant="primary" type="submit" class="w-full" data-test="confirm-password-button">
+            <flux:button
+                variant="primary"
+                type="submit"
+                class="w-full !bg-emerald-100 !text-emerald-700 !border !border-emerald-200 hover:!bg-emerald-200"
+                data-test="confirm-password-button"
+            >
                 {{ __('Confirm') }}
             </flux:button>
         </form>

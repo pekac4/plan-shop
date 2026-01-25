@@ -112,7 +112,7 @@
         </div>
 
         <div class="grid gap-4 md:grid-cols-3">
-            <x-ui.card class="p-5">
+            <x-ui.card class="p-5 !bg-rose-50/60 !border-rose-100/60">
                 <div class="space-y-3">
                     <div>
                         <h2 class="text-lg font-semibold text-slate-900">{{ __('Top recipes') }}</h2>
@@ -133,7 +133,7 @@
                 </div>
             </x-ui.card>
 
-            <x-ui.card class="p-5">
+            <x-ui.card class="p-5 !bg-rose-50/60 !border-rose-100/60">
                 <div class="space-y-3">
                     <div>
                         <h2 class="text-lg font-semibold text-slate-900">{{ __('Top ingredients') }}</h2>
@@ -163,7 +163,7 @@
                 </div>
             </x-ui.card>
 
-            <x-ui.card class="p-5">
+            <x-ui.card class="p-5 !bg-rose-50/60 !border-rose-100/60">
                 <div class="space-y-3">
                     <div>
                         <h2 class="text-lg font-semibold text-slate-900">{{ __('Shopping total') }}</h2>
@@ -181,7 +181,7 @@
         </div>
 
         <div class="grid gap-4 md:grid-cols-3">
-            <x-ui.card class="p-5 md:col-span-3">
+            <x-ui.card class="p-5 md:col-span-3 !bg-emerald-50/60 !border-emerald-100/60">
                 <div class="space-y-3">
                     <div>
                         <h2 class="text-lg font-semibold text-slate-900">{{ __('Community favorites') }}</h2>
@@ -286,7 +286,7 @@
         </div>
 
         <div class="grid gap-4 lg:grid-cols-2">
-            <x-ui.card class="p-5">
+            <x-ui.card class="p-5 !bg-amber-50/60 !border-amber-100/60">
                 <div class="space-y-3">
                     <div>
                         <h2 class="text-lg font-semibold text-slate-900">{{ __('Top users by stars') }}</h2>
@@ -318,7 +318,7 @@
                 </div>
             </x-ui.card>
 
-            <x-ui.card class="p-5">
+            <x-ui.card class="p-5 !bg-amber-50/60 !border-amber-100/60">
                 <div class="space-y-3">
                     <div>
                         <h2 class="text-lg font-semibold text-slate-900">{{ __('Top recipes of all time') }}</h2>
