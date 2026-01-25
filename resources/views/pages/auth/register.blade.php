@@ -57,14 +57,9 @@
             />
 
             <div class="flex items-center justify-end">
-                <flux:button
-                    type="submit"
-                    variant="primary"
-                    class="w-full !bg-emerald-100 !text-emerald-700 !border !border-emerald-200 hover:!bg-emerald-200"
-                    data-test="register-user-button"
-                >
+                <x-ui.button type="submit" variant="primary" class="w-full" data-test="register-user-button">
                     {{ __('Create account') }}
-                </flux:button>
+                </x-ui.button>
             </div>
         </form>
 

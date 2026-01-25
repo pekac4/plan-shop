@@ -13,13 +13,9 @@
         <div class="flex flex-col items-center justify-between space-y-3">
             <form method="POST" action="{{ route('verification.send') }}">
                 @csrf
-                <flux:button
-                    type="submit"
-                    variant="primary"
-                    class="w-full !bg-emerald-100 !text-emerald-700 !border !border-emerald-200 hover:!bg-emerald-200"
-                >
+                <x-ui.button type="submit" variant="primary" class="w-full">
                     {{ __('Resend verification email') }}
-                </flux:button>
+                </x-ui.button>
             </form>
 
             <form method="POST" action="{{ route('logout') }}">
