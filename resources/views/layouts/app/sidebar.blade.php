@@ -12,20 +12,67 @@
 
             <flux:sidebar.nav>
                 <flux:sidebar.group :heading="__('Platform')" class="grid">
-                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')">
+                    <flux:sidebar.item
+                        icon="home"
+                        :href="route('dashboard')"
+                        :current="request()->routeIs('dashboard')"
+                        class="nav-tone-dashboard"
+                    >
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
 
                 <flux:sidebar.group :heading="__('Meal Planner')" class="grid">
-                    <flux:sidebar.item icon="book-open-text" :href="route('recipes.index')" :current="request()->routeIs('recipes.*')">
+                    <flux:sidebar.item
+                        icon="book-open-text"
+                        :href="route('recipes.index')"
+                        :current="request()->routeIs('recipes.*')"
+                        class="nav-tone-meal"
+                    >
                         {{ __('Recipes') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="calendar" :href="route('meal-plan.index')" :current="request()->routeIs('meal-plan.*')">
+                    <flux:sidebar.item
+                        icon="calendar"
+                        :href="route('meal-plan.index')"
+                        :current="request()->routeIs('meal-plan.*')"
+                        class="nav-tone-meal"
+                    >
                         {{ __('Meal Plan') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="layout-grid" :href="route('shopping-list.index')" :current="request()->routeIs('shopping-list.*')">
+                    <flux:sidebar.item
+                        icon="layout-grid"
+                        :href="route('shopping-list.index')"
+                        :current="request()->routeIs('shopping-list.*')"
+                        class="nav-tone-meal"
+                    >
                         {{ __('Shopping List') }}
+                    </flux:sidebar.item>
+                </flux:sidebar.group>
+
+                <flux:sidebar.group :heading="__('Highlights')" class="grid">
+                    <flux:sidebar.item
+                        icon="chef-hat"
+                        :href="route('highlights.chef-of-month')"
+                        :current="request()->routeIs('highlights.chef-of-month')"
+                        class="nav-tone-highlight"
+                    >
+                        {{ __('Chef of the Month') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item
+                        icon="crown"
+                        :href="route('highlights.king-of-recipe')"
+                        :current="request()->routeIs('highlights.king-of-recipe')"
+                        class="nav-tone-highlight"
+                    >
+                        {{ __('King of the Recipe') }}
+                    </flux:sidebar.item>
+                    <flux:sidebar.item
+                        icon="sparkles"
+                        :href="route('highlights.upcoming-chef')"
+                        :current="request()->routeIs('highlights.upcoming-chef')"
+                        class="nav-tone-highlight"
+                    >
+                        {{ __('Upcoming Chef') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
             </flux:sidebar.nav>
