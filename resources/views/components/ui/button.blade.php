@@ -10,15 +10,15 @@
         : 'px-4 py-2 text-sm';
 
     $variants = [
-        'primary' => 'bg-blue-400 text-white hover:bg-blue-500',
-        'secondary' => 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-50',
+        'primary' => 'bg-emerald-100 text-emerald-700 border border-emerald-200 hover:bg-emerald-200',
+        'secondary' => 'bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200',
         'ghost' => 'text-slate-700 hover:text-slate-900',
-        'danger' => 'bg-red-400 text-white hover:bg-red-500',
-        'edit' => 'bg-amber-300 text-white hover:bg-amber-400',
-        'success' => 'bg-green-400 text-white hover:bg-green-500',
+        'danger' => 'bg-rose-100 text-rose-700 border border-rose-200 hover:bg-rose-200',
+        'edit' => 'bg-amber-100 text-amber-700 border border-amber-200 hover:bg-amber-200',
+        'success' => 'bg-emerald-100 text-emerald-700 border border-emerald-200 hover:bg-emerald-200',
     ];
 
-    $classes = 'inline-flex items-center justify-center rounded-xl font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400 ';
+    $classes = 'inline-flex items-center justify-center rounded-xl font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-400 ';
     $classes .= $sizeClasses.' '.($variants[$variant] ?? $variants['secondary']);
 @endphp
 

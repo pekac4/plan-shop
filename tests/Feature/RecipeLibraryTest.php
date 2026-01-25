@@ -53,3 +53,22 @@ it('allows users to add a public recipe to their library', function () {
         'price' => 1.2,
     ]);
 });
+
+it('does not add a recipe to the library when it belongs to the same user', function () {
+    $user = User::factory()->create();
+    $recipe = Recipe::factory()->for($user)->create([
+        'title' => 'My Soup',
+        'is_public' => true,
+    ]);
+
+    $this->actingAs($user)
+        ->post(route('recipes.add-to-library', $recipe))
+        ->assertRedirect();
+
+    $copyExists = Recipe::query()
+        ->where('user_id', $user->id)
+        ->where('original_recipe_id', $recipe->id)
+        ->exists();
+
+    expect($copyExists)->toBeFalse();
+});

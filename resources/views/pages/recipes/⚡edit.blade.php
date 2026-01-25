@@ -328,7 +328,7 @@ new class extends Component
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
-            <x-ui.button variant="secondary" :href="route('recipes.index')" wire:navigate>
+            <x-ui.button variant="secondary" :href="route('recipes.index')">
                 {{ __('Back to recipes') }}
             </x-ui.button>
 

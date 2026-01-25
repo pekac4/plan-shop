@@ -6,25 +6,25 @@
     <body class="min-h-screen bg-white dark:bg-zinc-800">
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
-                <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" wire:navigate />
+                <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" />
                 <flux:sidebar.collapse class="lg:hidden" />
             </flux:sidebar.header>
 
             <flux:sidebar.nav>
                 <flux:sidebar.group :heading="__('Platform')" class="grid">
-                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>
+                    <flux:sidebar.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
 
                 <flux:sidebar.group :heading="__('Meal Planner')" class="grid">
-                    <flux:sidebar.item icon="book-open-text" :href="route('recipes.index')" :current="request()->routeIs('recipes.*')" wire:navigate>
+                    <flux:sidebar.item icon="book-open-text" :href="route('recipes.index')" :current="request()->routeIs('recipes.*')">
                         {{ __('Recipes') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="calendar" :href="route('meal-plan.index')" :current="request()->routeIs('meal-plan.*')" wire:navigate>
+                    <flux:sidebar.item icon="calendar" :href="route('meal-plan.index')" :current="request()->routeIs('meal-plan.*')">
                         {{ __('Meal Plan') }}
                     </flux:sidebar.item>
-                    <flux:sidebar.item icon="layout-grid" :href="route('shopping-list.index')" :current="request()->routeIs('shopping-list.*')" wire:navigate>
+                    <flux:sidebar.item icon="layout-grid" :href="route('shopping-list.index')" :current="request()->routeIs('shopping-list.*')">
                         {{ __('Shopping List') }}
                     </flux:sidebar.item>
                 </flux:sidebar.group>
@@ -70,7 +70,7 @@
                     <flux:menu.separator />
 
                     <flux:menu.radio.group>
-                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>
+                        <flux:menu.item :href="route('profile.edit')" icon="cog">
                             {{ __('Settings') }}
                         </flux:menu.item>
                     </flux:menu.radio.group>

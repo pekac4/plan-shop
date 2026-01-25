@@ -4,7 +4,7 @@
             <a
                 href="{{ route('profile.edit') }}"
                 class="block rounded-xl px-3 py-2 text-sm font-medium transition {{ request()->routeIs('profile.*') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:text-slate-900' }}"
-                wire:navigate
+
                 data-test="settings-profile"
             >
                 {{ __('Profile') }}
@@ -12,7 +12,7 @@
             <a
                 href="{{ route('user-password.edit') }}"
                 class="block rounded-xl px-3 py-2 text-sm font-medium transition {{ request()->routeIs('user-password.*') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:text-slate-900' }}"
-                wire:navigate
+
                 data-test="settings-password"
             >
                 {{ __('Password') }}
@@ -21,7 +21,7 @@
                 <a
                     href="{{ route('two-factor.show') }}"
                     class="block rounded-xl px-3 py-2 text-sm font-medium transition {{ request()->routeIs('two-factor.*') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:text-slate-900' }}"
-                    wire:navigate
+
                     data-test="settings-two-factor"
                 >
                     {{ __('Two-Factor Auth') }}
@@ -30,7 +30,7 @@
             <a
                 href="{{ route('appearance.edit') }}"
                 class="block rounded-xl px-3 py-2 text-sm font-medium transition {{ request()->routeIs('appearance.*') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:text-slate-900' }}"
-                wire:navigate
+
                 data-test="settings-appearance"
             >
                 {{ __('Appearance') }}

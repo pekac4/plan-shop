@@ -207,7 +207,7 @@ new class extends Component
             <p class="text-sm text-slate-600">{{ __('Add a new recipe and its ingredients.') }}</p>
         </div>
 
-        <x-ui.button variant="secondary" :href="route('recipes.index')" wire:navigate>
+        <x-ui.button variant="secondary" :href="route('recipes.index')">
             {{ __('Back to recipes') }}
         </x-ui.button>
     </div>
