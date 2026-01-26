@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\ChefOfMonthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KingOfRecipeController;
@@ -11,6 +12,13 @@ Route::get('/', HomeController::class)->name('home');
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+Route::middleware(['guest'])->group(function () {
+    Route::get('auth/google/redirect', [GoogleAuthController::class, 'redirect'])
+        ->name('auth.google.redirect');
+    Route::get('auth/google/callback', [GoogleAuthController::class, 'callback'])
+        ->name('auth.google.callback');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('highlights/chef-of-the-month', ChefOfMonthController::class)
