@@ -47,6 +47,35 @@
     }
 }
 
+@layer components {
+    .nav-tone-dashboard {
+        @apply text-blue-700/90;
+    }
+
+    .nav-tone-dashboard [data-flux-icon],
+    .nav-tone-dashboard svg {
+        @apply text-blue-500/90;
+    }
+
+    .nav-tone-meal {
+        @apply text-slate-700;
+    }
+
+    .nav-tone-meal [data-flux-icon],
+    .nav-tone-meal svg {
+        @apply text-rose-400/90;
+    }
+
+    .nav-tone-highlight {
+        @apply text-slate-700;
+    }
+
+    .nav-tone-highlight [data-flux-icon],
+    .nav-tone-highlight svg {
+        @apply text-amber-500/90;
+    }
+}
+
 [data-flux-field]:not(ui-radio, ui-checkbox) {
     @apply grid gap-2;
 }
