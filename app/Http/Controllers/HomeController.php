@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\HighlightRecipeSelector;
 use App\ImageResizer;
-use App\Models\Ingredient;
 use App\Models\Recipe;
-use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -18,57 +17,13 @@ class HomeController extends Controller
         $monthStart = CarbonImmutable::now()->subMonthNoOverflow()->startOfMonth();
         $monthEnd = $monthStart->endOfMonth();
 
-        $recipeOfMonth = $this->resolveRecipeOfMonth($monthStart, $monthEnd);
+        $recipeOfMonth = (new HighlightRecipeSelector)->chefOfMonth($monthStart, $monthEnd);
         $this->ensureRecipeCover($recipeOfMonth);
 
         return view('welcome', [
             'recipeOfMonth' => $recipeOfMonth,
             'monthLabel' => $monthStart->format('F Y'),
         ]);
-    }
-
-    private function resolveRecipeOfMonth(CarbonImmutable $monthStart, CarbonImmutable $monthEnd): Recipe
-    {
-        $recipe = Recipe::query()
-            ->with('user')
-            ->where('is_public', true)
-            ->whereBetween('created_at', [$monthStart, $monthEnd])
-            ->latest('created_at')
-            ->first();
-
-        if ($recipe) {
-            return $recipe;
-        }
-
-        $author = User::query()
-            ->where('email', 'maria_k@example.com')
-            ->first();
-
-        if (! $author) {
-            $author = User::factory()->create([
-                'name' => 'Maria K',
-                'email' => 'maria_k@example.com',
-            ]);
-        }
-
-        $recipe = Recipe::factory()->for($author)->create([
-            'title' => 'Roasted Veggie Bowl with Lemon Tahini',
-            'description' => 'Fresh, fast, and perfect for busy weeks — ready in 25 minutes.',
-            'instructions' => 'Roast veggies, whisk tahini sauce, and assemble bowls.',
-            'prep_time_minutes' => 10,
-            'cook_time_minutes' => 15,
-            'servings' => 2,
-            'is_public' => true,
-            'created_at' => $monthStart->addDays(4),
-        ]);
-
-        Ingredient::factory()->for($recipe)->create([
-            'name' => 'Zucchini',
-            'quantity' => 2,
-            'unit' => 'pcs',
-        ]);
-
-        return $recipe;
     }
 
     private function ensureRecipeCover(Recipe $recipe): void
