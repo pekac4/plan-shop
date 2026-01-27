@@ -45,34 +45,74 @@
     ::file-selector-button {
         border-color: var(--color-gray-200, currentColor);
     }
+
+    .dark .text-slate-900 {
+        @apply text-slate-100;
+    }
+
+    .dark .text-slate-800 {
+        @apply text-slate-100;
+    }
+
+    .dark .text-slate-700 {
+        @apply text-slate-200;
+    }
+
+    .dark .text-slate-600 {
+        @apply text-slate-300;
+    }
+
+    .dark .text-slate-500 {
+        @apply text-slate-400;
+    }
+
+    .dark .border-slate-200 {
+        @apply border-slate-700;
+    }
+
+    .dark .border-slate-100 {
+        @apply border-slate-700;
+    }
+
+    .dark .border-slate-300 {
+        @apply border-slate-600;
+    }
+
+    .dark .bg-slate-50 {
+        @apply bg-slate-950;
+    }
 }
 
 @layer components {
     .nav-tone-dashboard {
-        @apply text-blue-700/90;
+        @apply text-blue-700/90 dark:text-blue-200;
     }
 
     .nav-tone-dashboard [data-flux-icon],
     .nav-tone-dashboard svg {
-        @apply text-blue-500/90;
+        @apply text-blue-500/90 dark:text-blue-300;
     }
 
     .nav-tone-meal {
-        @apply text-slate-700;
+        @apply text-slate-700 dark:text-slate-200;
     }
 
     .nav-tone-meal [data-flux-icon],
     .nav-tone-meal svg {
-        @apply text-rose-400/90;
+        @apply text-rose-400/90 dark:text-rose-300;
     }
 
     .nav-tone-highlight {
-        @apply text-slate-700;
+        @apply text-slate-700 dark:text-slate-200;
     }
 
     .nav-tone-highlight [data-flux-icon],
     .nav-tone-highlight svg {
-        @apply text-amber-500/90;
+        @apply text-amber-500/90 dark:text-amber-300;
+    }
+
+    .dark .hover\:text-green-700:hover {
+        @apply text-green-300;
     }
 }
 

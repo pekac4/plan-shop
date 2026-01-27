@@ -1,45 +1,45 @@
 <x-layouts::app :title="__('Dashboard')">
     <div class="space-y-6">
         <div class="space-y-1">
-            <h1 class="text-2xl font-semibold text-slate-900">{{ __('Dashboard') }}</h1>
-            <p class="text-sm text-slate-600">{{ __('Quick access to your meal planning tools.') }}</p>
+            <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">{{ __('Dashboard') }}</h1>
+            <p class="text-sm text-slate-600 dark:text-slate-300">{{ __('Quick access to your meal planning tools.') }}</p>
         </div>
 
         <div class="grid gap-4 md:grid-cols-3">
-            <x-ui.card class="p-5 !bg-rose-50/60 !border-rose-100/60">
+            <x-ui.card class="p-5 bg-rose-50/60 border-rose-100/60 dark:bg-slate-900 dark:border-slate-700">
                 <div class="space-y-3">
                     <div>
-                        <h2 class="text-lg font-semibold text-slate-900">{{ __('Top recipes') }}</h2>
-                        <p class="text-xs text-slate-500">{{ $monthLabel }}</p>
+                        <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ __('Top recipes') }}</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ $monthLabel }}</p>
                     </div>
                     <div class="grid gap-2 text-sm text-slate-700">
                         @forelse ($topRecipes as $entry)
                             <div class="flex items-center justify-between gap-2">
-                                <a class="text-slate-900 hover:text-green-700" href="{{ $entry->recipe_id ? route('recipes.edit', $entry->recipe_id) : route('recipes.index') }}">
+                                <a class="text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ $entry->recipe_id ? route('recipes.edit', $entry->recipe_id) : route('recipes.index') }}">
                                     {{ $entry->recipe?->title ?? __('Recipe') }}
                                 </a>
-                                <span class="text-xs text-slate-500">{{ $entry->uses }} {{ __('uses') }}</span>
+                                <span class="text-xs text-slate-500 dark:text-slate-400">{{ $entry->uses }} {{ __('uses') }}</span>
                             </div>
                         @empty
-                            <p class="text-sm text-slate-500">{{ __('No recipes planned last month.') }}</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">{{ __('No recipes planned last month.') }}</p>
                         @endforelse
                     </div>
                 </div>
             </x-ui.card>
 
-            <x-ui.card class="p-5 !bg-rose-50/60 !border-rose-100/60">
+            <x-ui.card class="p-5 bg-rose-50/60 border-rose-100/60 dark:bg-slate-900 dark:border-slate-700">
                 <div class="space-y-3">
                     <div>
-                        <h2 class="text-lg font-semibold text-slate-900">{{ __('Top ingredients') }}</h2>
-                        <p class="text-xs text-slate-500">{{ $monthLabel }}</p>
+                        <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ __('Top ingredients') }}</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ $monthLabel }}</p>
                     </div>
                     <div class="grid gap-2 text-sm text-slate-700">
                         @forelse ($topIngredients as $ingredient)
                             <div class="flex items-center justify-between gap-2">
-                                <a class="text-slate-900 hover:text-green-700" href="{{ route('recipes.index', ['ingredient' => $ingredient->name]) }}">
+                                <a class="text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ route('recipes.index', ['ingredient' => $ingredient->name]) }}">
                                     {{ $ingredient->name }}
                                 </a>
-                                <span class="text-xs text-slate-500">
+                                <span class="text-xs text-slate-500 dark:text-slate-400">
                                     @if ($ingredient->display_quantity)
                                         {{ $ingredient->display_quantity }} {{ $ingredient->unit }}
                                     @else
@@ -48,22 +48,22 @@
                                 </span>
                             </div>
                         @empty
-                            <p class="text-sm text-slate-500">{{ __('No ingredients used last month.') }}</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">{{ __('No ingredients used last month.') }}</p>
                         @endforelse
                     </div>
                 </div>
             </x-ui.card>
 
-            <x-ui.card class="p-5 !bg-rose-50/60 !border-rose-100/60">
+            <x-ui.card class="p-5 bg-rose-50/60 border-rose-100/60 dark:bg-slate-900 dark:border-slate-700">
                 <div class="space-y-3">
                     <div>
-                        <h2 class="text-lg font-semibold text-slate-900">{{ __('Shopping total') }}</h2>
-                        <p class="text-xs text-slate-500">{{ $monthLabel }}</p>
+                        <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ __('Shopping total') }}</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ $monthLabel }}</p>
                     </div>
-                    <div class="text-2xl font-semibold text-slate-900">
+                    <div class="text-2xl font-semibold text-slate-900 dark:text-slate-100">
                         {{ __('Approx.') }} {{ $currencySymbol }}{{ $displayTotal === '' ? '0' : $displayTotal }}
                     </div>
-                    <p class="text-sm text-slate-600">{{ __('From generated shopping lists.') }}</p>
+                    <p class="text-sm text-slate-600 dark:text-slate-300">{{ __('From generated shopping lists.') }}</p>
                     <x-ui.button size="sm" variant="secondary" :href="route('shopping-list.index')">
                         {{ __('View list') }}
                     </x-ui.button>
@@ -72,15 +72,15 @@
         </div>
 
         <div class="grid gap-4 md:grid-cols-3">
-            <x-ui.card class="p-5 md:col-span-3 !bg-emerald-50/60 !border-emerald-100/60">
+            <x-ui.card class="p-5 md:col-span-3 bg-emerald-50/60 border-emerald-100/60 dark:bg-slate-900 dark:border-slate-700">
                 <div class="space-y-3">
                     <div>
-                        <h2 class="text-lg font-semibold text-slate-900">{{ __('Community favorites') }}</h2>
-                        <p class="text-xs text-slate-500">{{ $monthLabel }}</p>
+                        <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ __('Community favorites') }}</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ $monthLabel }}</p>
                     </div>
                     <div class="grid text-sm text-slate-700">
                         @forelse ($topCommunityRecipes as $entry)
-                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 py-2 last:border-b-0">
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 py-2 last:border-b-0 dark:border-slate-700">
                                 <div class="flex items-start gap-3">
                                     <div class="h-12 w-14 overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
                                         @if ($entry->recipe?->cover_thumbnail_url && $entry->recipe?->cover_image_url)
@@ -99,7 +99,7 @@
                                     </div>
                                     <div class="flex flex-col gap-1">
                                         <div class="group relative inline-block">
-                                            <a class="text-slate-900 hover:text-green-700" href="{{ $entry->recipe_id ? route('recipes.edit', $entry->recipe_id) : route('recipes.index') }}">
+                                            <a class="text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ $entry->recipe_id ? route('recipes.edit', $entry->recipe_id) : route('recipes.index') }}">
                                                 {{ $entry->recipe?->title ?? __('Recipe') }}
                                             </a>
                                             <div class="pointer-events-none absolute left-0 top-full z-20 mt-2 hidden w-56 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-900 shadow-sm group-hover:block">
@@ -113,7 +113,7 @@
                                                 </ul>
                                             </div>
                                         </div>
-                                        <span class="text-xs text-slate-500">
+                                        <span class="text-xs text-slate-500 dark:text-slate-400">
                                             {{ $entry->recipe?->user?->name ?? __('Unknown') }}
                                         </span>
                                     </div>
@@ -129,7 +129,7 @@
                                             <form method="dialog">
                                                 <button
                                                     type="submit"
-                                                    class="absolute -top-4 -right-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 shadow hover:text-slate-900"
+                                                    class="absolute -top-4 -right-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 shadow hover:text-slate-900 dark:bg-slate-800 dark:text-slate-200 dark:hover:text-white"
                                                     aria-label="{{ __('Close') }}"
                                                 >
                                                     ✕
@@ -139,8 +139,8 @@
                                     </dialog>
                                 @endif
                                 <div class="flex items-center gap-2">
-                                    <span class="text-xs text-slate-500">{{ $entry->uses }} {{ __('uses') }}</span>
-                                    <span class="inline-flex items-center gap-1 text-xs text-slate-500" data-test="community-saves-{{ $entry->recipe_id }}">
+                                    <span class="text-xs text-slate-500 dark:text-slate-400">{{ $entry->uses }} {{ __('uses') }}</span>
+                                    <span class="inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400" data-test="community-saves-{{ $entry->recipe_id }}">
                                         <svg class="h-4 w-4 text-emerald-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                             <path d="M5 3a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16l-5-3-5 3V3z" />
                                         </svg>
@@ -148,7 +148,7 @@
                                     </span>
                                     @if ($entry->recipe)
                                         @if ($ownedOriginals->has($entry->recipe_id))
-                                            <a class="text-xs font-medium text-slate-500 hover:text-green-700" href="{{ route('recipes.edit', $ownedOriginals->get($entry->recipe_id)) }}">
+                                            <a class="text-xs font-medium text-slate-500 hover:text-green-700 dark:text-slate-400 dark:hover:text-green-300" href="{{ route('recipes.edit', $ownedOriginals->get($entry->recipe_id)) }}">
                                                 {{ __('Already in my book') }}
                                             </a>
                                         @else
@@ -163,7 +163,7 @@
                                 </div>
                             </div>
                         @empty
-                            <p class="text-sm text-slate-500">{{ __('No public recipes yet.') }}</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">{{ __('No public recipes yet.') }}</p>
                         @endforelse
                     </div>
                 </div>
@@ -171,11 +171,11 @@
         </div>
 
         <div class="grid gap-4 lg:grid-cols-2">
-            <x-ui.card class="p-5 !bg-amber-50/60 !border-amber-100/60">
+            <x-ui.card class="p-5 bg-amber-50/60 border-amber-100/60 dark:bg-slate-900 dark:border-slate-700">
                 <div class="space-y-3">
                     <div>
-                        <h2 class="text-lg font-semibold text-slate-900">{{ __('Top users by saves') }}</h2>
-                        <p class="text-xs text-slate-500">{{ __('All-time across their recipes') }}</p>
+                        <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ __('Top users by saves') }}</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('All-time across their recipes') }}</p>
                     </div>
                     <div class="grid gap-3 text-sm text-slate-700">
                         @forelse ($topSavedUsers as $user)
@@ -187,9 +187,9 @@
                                         :initials="$user->initials()"
                                         size="sm"
                                     />
-                                    <span class="text-slate-900">{{ $user->name }}</span>
+                                    <span class="text-slate-900 dark:text-slate-100">{{ $user->name }}</span>
                                 </div>
-                                <span class="inline-flex items-center gap-1 text-xs text-slate-500" data-test="user-saves-{{ $user->id }}">
+                                <span class="inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400" data-test="user-saves-{{ $user->id }}">
                                     <svg class="h-4 w-4 text-emerald-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                         <path d="M5 3a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16l-5-3-5 3V3z" />
                                     </svg>
@@ -197,17 +197,17 @@
                                 </span>
                             </div>
                         @empty
-                            <p class="text-sm text-slate-500">{{ __('No saves yet.') }}</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">{{ __('No saves yet.') }}</p>
                         @endforelse
                     </div>
                 </div>
             </x-ui.card>
 
-            <x-ui.card class="p-5 !bg-amber-50/60 !border-amber-100/60">
+            <x-ui.card class="p-5 bg-amber-50/60 border-amber-100/60 dark:bg-slate-900 dark:border-slate-700">
                 <div class="space-y-3">
                     <div>
-                        <h2 class="text-lg font-semibold text-slate-900">{{ __('Top recipes of all time') }}</h2>
-                        <p class="text-xs text-slate-500">{{ __('Based on total saves') }}</p>
+                        <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ __('Top recipes of all time') }}</h2>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Based on total saves') }}</p>
                     </div>
                     <div class="grid gap-3 text-sm text-slate-700">
                         @forelse ($topSavedRecipes as $recipe)
@@ -239,7 +239,7 @@
                                                 <form method="dialog">
                                                     <button
                                                         type="submit"
-                                                        class="absolute -top-4 -right-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 shadow hover:text-slate-900"
+                                                        class="absolute -top-4 -right-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 shadow hover:text-slate-900 dark:bg-slate-800 dark:text-slate-200 dark:hover:text-white"
                                                         aria-label="{{ __('Close') }}"
                                                     >
                                                         ✕
@@ -248,11 +248,11 @@
                                             </div>
                                         </dialog>
                                     @endif
-                                    <a class="text-slate-900 hover:text-green-700" href="{{ $recipe->id ? route('recipes.edit', $recipe->id) : route('recipes.index') }}">
+                                    <a class="text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ $recipe->id ? route('recipes.edit', $recipe->id) : route('recipes.index') }}">
                                         {{ $recipe->title }}
                                     </a>
                                 </div>
-                                <span class="inline-flex items-center gap-1 text-xs text-slate-500" data-test="recipe-saves-{{ $recipe->id }}">
+                                <span class="inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400" data-test="recipe-saves-{{ $recipe->id }}">
                                     <svg class="h-4 w-4 text-emerald-600" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                         <path d="M5 3a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16l-5-3-5 3V3z" />
                                     </svg>
@@ -260,7 +260,7 @@
                                 </span>
                             </div>
                         @empty
-                            <p class="text-sm text-slate-500">{{ __('No saved recipes yet.') }}</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400">{{ __('No saved recipes yet.') }}</p>
                         @endforelse
                     </div>
                 </div>

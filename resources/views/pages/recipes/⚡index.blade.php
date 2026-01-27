@@ -131,8 +131,8 @@ new class extends Component
 <section class="space-y-6">
     <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="space-y-1">
-            <h1 class="text-2xl font-semibold text-slate-900">{{ __('Recipes') }}</h1>
-            <p class="text-sm text-slate-600">
+            <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">{{ __('Recipes') }}</h1>
+            <p class="text-sm text-slate-600 dark:text-slate-300">
                 {{ __('Manage your recipes and ingredients.') }}
             </p>
         </div>
@@ -153,12 +153,12 @@ new class extends Component
             <x-ui.input wire:model.live="search" name="search" :label="__('Search')" placeholder="{{ __('Search by title') }}" />
 
             <div class="grid gap-1">
-                <label class="text-sm font-medium text-slate-700" for="visibility">{{ __('Visibility') }}</label>
+                <label class="text-sm font-medium text-slate-700 dark:text-slate-200" for="visibility">{{ __('Visibility') }}</label>
                 <select
                     id="visibility"
                     name="visibility"
                     wire:model.live="visibility"
-                    class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                    class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                 >
                     <option value="all">{{ __('All') }}</option>
                     <option value="public">{{ __('Public') }}</option>
@@ -170,12 +170,12 @@ new class extends Component
             </div>
 
             <div class="grid gap-1">
-                <label class="text-sm font-medium text-slate-700" for="ownership">{{ __('Ownership') }}</label>
+                <label class="text-sm font-medium text-slate-700 dark:text-slate-200" for="ownership">{{ __('Ownership') }}</label>
                 <select
                     id="ownership"
                     name="ownership"
                     wire:model.live="ownership"
-                    class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                    class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                 >
                     <option value="all">{{ __('All') }}</option>
                     <option value="mine">{{ __('Mine') }}</option>
@@ -193,8 +193,8 @@ new class extends Component
             @forelse ($this->recipes as $recipe)
                 <x-ui.card class="p-4">
                     <div class="flex flex-wrap items-start justify-between gap-3">
-                        <div class="flex items-start gap-4">
-                            <div class="h-20 w-24 overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+                            <div class="flex items-start gap-4">
+                            <div class="h-20 w-24 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
                                 @if ($recipe->cover_thumbnail_url)
                                     <img
                                         src="{{ $recipe->cover_thumbnail_url }}"
@@ -209,22 +209,22 @@ new class extends Component
                             </div>
                             <div class="space-y-2">
                                 <div>
-                                    <a class="text-lg font-semibold text-slate-900 hover:text-green-700" href="{{ route('recipes.edit', $recipe) }}">
+                                    <a class="text-lg font-semibold text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ route('recipes.edit', $recipe) }}">
                                         {{ $recipe->title }}
                                     </a>
-                                    <p class="text-sm text-slate-600">
+                                    <p class="text-sm text-slate-600 dark:text-slate-300">
                                         {{ $recipe->servings }} {{ __('servings') }} · {{ $recipe->ingredients_count }} {{ __('ingredients') }}
                                     </p>
                                     @if ($recipe->originalRecipe)
-                                        <p class="text-xs text-slate-500">
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">
                                             {{ __('Original by') }} {{ $recipe->originalRecipe->user?->name ?? __('Unknown') }}
                                         </p>
                                     @elseif ($recipe->user_id !== Auth::id())
-                                        <p class="text-xs text-slate-500">
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">
                                             {{ __('By') }} {{ $recipe->user?->name ?? __('Unknown') }}
                                         </p>
                                     @endif
-                                    <p class="text-sm text-slate-600">
+                                    <p class="text-sm text-slate-600 dark:text-slate-300">
                                         {{ __('Approx.') }} ${{ number_format($recipe->approximate_price, 2) }}
                                     </p>
                                 </div>
@@ -277,7 +277,7 @@ new class extends Component
                     </div>
 
                     @if ($recipe->description)
-                        <p class="text-sm text-slate-600">
+                        <p class="text-sm text-slate-600 dark:text-slate-300">
                             {{ $recipe->description }}
                         </p>
                     @endif
@@ -286,7 +286,7 @@ new class extends Component
                 <x-ui.card class="p-10 text-center">
                     <div class="space-y-3">
                         <div class="text-3xl" aria-hidden="true">🥬</div>
-                        <p class="text-sm text-slate-600">{{ __('No recipes yet.') }}</p>
+                        <p class="text-sm text-slate-600 dark:text-slate-300">{{ __('No recipes yet.') }}</p>
                         <x-ui.button variant="primary" :href="route('recipes.create')" data-test="recipes-create-empty">
                             {{ __('Create Recipe') }}
                         </x-ui.button>

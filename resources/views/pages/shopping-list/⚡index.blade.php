@@ -237,8 +237,8 @@ new class extends Component
 <section class="space-y-6">
     <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="space-y-1">
-            <h1 class="text-2xl font-semibold text-slate-900">{{ __('Shopping List') }}</h1>
-            <p class="text-sm text-slate-600">{{ __('Generate an aggregated list from planned meals.') }}</p>
+            <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">{{ __('Shopping List') }}</h1>
+            <p class="text-sm text-slate-600 dark:text-slate-300">{{ __('Generate an aggregated list from planned meals.') }}</p>
         </div>
 
         <x-ui.button size="sm" variant="secondary" wire:click="generate">
@@ -260,8 +260,8 @@ new class extends Component
         <x-ui.card class="p-4 space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                    <h2 class="text-sm font-semibold text-slate-900">{{ __('Custom items') }}</h2>
-                    <p class="text-xs text-slate-500">{{ __('Add items that are not part of recipes.') }}</p>
+                    <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ __('Custom items') }}</h2>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Add items that are not part of recipes.') }}</p>
                 </div>
             </div>
 
@@ -269,19 +269,19 @@ new class extends Component
                 <div class="grid gap-2">
                     <x-ui.input wire:model.live="customSearch" name="customSearch" :label="__('Search saved')" placeholder="{{ __('Search saved items') }}" />
                     @if ($customSearch !== '')
-                        <div class="rounded-xl border border-slate-200 bg-white p-2 text-sm text-slate-700">
+                        <div class="rounded-xl border border-slate-200 bg-white p-2 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
                             <div class="grid gap-1">
                                 @forelse ($this->customItems as $customItem)
                                     <button
                                         type="button"
-                                        class="flex w-full items-center justify-between rounded-lg px-2 py-1 text-left hover:bg-slate-50"
+                                        class="flex w-full items-center justify-between rounded-lg px-2 py-1 text-left hover:bg-slate-50 dark:hover:bg-slate-800"
                                         wire:click="selectCustomItem({{ $customItem['id'] }})"
                                     >
                                         <span>{{ $customItem['name'] }}</span>
-                                        <span class="text-xs text-slate-500">{{ $customItem['price'] }}</span>
+                                        <span class="text-xs text-slate-500 dark:text-slate-400">{{ $customItem['price'] }}</span>
                                     </button>
                                 @empty
-                                    <span class="text-xs text-slate-500">{{ __('No matches.') }}</span>
+                                    <span class="text-xs text-slate-500 dark:text-slate-400">{{ __('No matches.') }}</span>
                                 @endforelse
                             </div>
                         </div>
@@ -289,12 +289,12 @@ new class extends Component
                 </div>
 
                 <div class="grid gap-1">
-                    <label class="text-sm font-medium text-slate-700" for="customItemId">{{ __('Saved items') }}</label>
+                    <label class="text-sm font-medium text-slate-700 dark:text-slate-200" for="customItemId">{{ __('Saved items') }}</label>
                     <select
                         id="customItemId"
                         name="customItemId"
                         wire:model.live="customItemId"
-                        class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                        class="w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-slate-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                     >
                         <option value="">{{ __('Select saved item') }}</option>
                         @foreach ($this->customItems as $customItem)
@@ -321,9 +321,9 @@ new class extends Component
             </div>
         </x-ui.card>
 
-        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4 text-sm text-slate-600">
+        <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-4 text-sm text-slate-600 dark:border-slate-700 dark:text-slate-300">
             <span>{{ __('Total for range') }}</span>
-            <span class="font-semibold text-slate-900">{{ __('Approx.') }} ${{ rtrim(rtrim($totalPrice, '0'), '.') }}</span>
+            <span class="font-semibold text-slate-900 dark:text-slate-100">{{ __('Approx.') }} ${{ rtrim(rtrim($totalPrice, '0'), '.') }}</span>
         </div>
 
         <div class="grid gap-3">
@@ -333,14 +333,14 @@ new class extends Component
                         <span class="flex items-center gap-3">
                             <input
                                 type="checkbox"
-                                class="h-4 w-4 rounded border-slate-300 text-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                                class="h-4 w-4 rounded border-slate-300 text-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 dark:border-slate-600 dark:bg-slate-900"
                                 @checked($item['checked_at'])
                                 wire:click="{{ $item['is_custom'] ? 'toggleCustomItem' : 'toggleItem' }}({{ $item['id'] }})"
                                 data-test="shopping-item-{{ $item['id'] }}"
                             />
                             <span class="grid gap-1">
-                                <span class="font-medium text-slate-900">{{ $item['name'] }}</span>
-                                <span class="text-xs text-slate-500">
+                                <span class="font-medium text-slate-900 dark:text-slate-100">{{ $item['name'] }}</span>
+                                <span class="text-xs text-slate-500 dark:text-slate-400">
                                     @if ($item['display_quantity'])
                                         {{ $item['display_quantity'] }} {{ $item['unit'] }}
                                     @else
@@ -359,7 +359,7 @@ new class extends Component
                             </span>
                         </span>
 
-                        <span class="text-xs text-slate-400">
+                        <span class="text-xs text-slate-400 dark:text-slate-500">
                             {{ $item['checked_at'] ? __('Checked') : __('Open') }}
                         </span>
                     </label>
@@ -368,7 +368,7 @@ new class extends Component
                 <x-ui.card class="p-10 text-center">
                     <div class="space-y-3">
                         <div class="text-3xl" aria-hidden="true">🥬</div>
-                        <p class="text-sm text-slate-600">{{ __('No items yet. Add meals to your plan and generate a list.') }}</p>
+                        <p class="text-sm text-slate-600 dark:text-slate-300">{{ __('No items yet. Add meals to your plan and generate a list.') }}</p>
                         <x-ui.button variant="primary" :href="route('meal-plan.index')">
                             {{ __('Plan meals') }}
                         </x-ui.button>
