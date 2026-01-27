@@ -309,8 +309,8 @@ new class extends Component
 <section class="space-y-6">
     <div class="flex flex-wrap items-center justify-between gap-4">
         <div class="space-y-1">
-            <h1 class="text-2xl font-semibold text-slate-900">{{ $recipe->title }}</h1>
-            <p class="text-sm text-slate-600">
+            <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">{{ $recipe->title }}</h1>
+            <p class="text-sm text-slate-600 dark:text-slate-300">
                 @if ($recipe->originalRecipe)
                     {{ __('Viewing a copied recipe.') }}
                 @else
@@ -318,11 +318,11 @@ new class extends Component
                 @endif
             </p>
             @if ($recipe->originalRecipe)
-                <p class="text-xs text-slate-500">
+                <p class="text-xs text-slate-500 dark:text-slate-400">
                     {{ __('Original by') }} {{ $recipe->originalRecipe->user?->name ?? __('Unknown') }}
                 </p>
             @endif
-            <p class="text-sm text-slate-600">
+            <p class="text-sm text-slate-600 dark:text-slate-300">
                 {{ __('Approx.') }} ${{ number_format($recipe->approximate_price, 2) }}
             </p>
         </div>
@@ -361,7 +361,7 @@ new class extends Component
                     accept="image/*"
                     :disabled="! $canEdit"
                 />
-                <div class="flex items-center text-sm text-slate-500">
+                <div class="flex items-center text-sm text-slate-500 dark:text-slate-400">
                     {{ __('Optional. We will resize the image for a clean cover and thumbnail.') }}
                 </div>
             </div>
@@ -398,11 +398,11 @@ new class extends Component
 
             <x-ui.textarea wire:model="instructions" name="instructions" :label="__('Instructions')" rows="6" required :disabled="! $canEdit" />
 
-            <label class="inline-flex items-center gap-2 text-sm text-slate-700">
+            <label class="inline-flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
                 <input
                     type="checkbox"
                     wire:model="isPublic"
-                    class="h-4 w-4 rounded border-slate-300 text-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                    class="h-4 w-4 rounded border-slate-300 text-green-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 dark:border-slate-600 dark:bg-slate-900"
                     @disabled(! $canEdit)
                 />
                 {{ __('Make recipe public') }}
@@ -411,7 +411,7 @@ new class extends Component
 
         <x-ui.card class="p-6 space-y-4">
             <div class="flex flex-wrap items-center justify-between gap-4">
-                <h2 class="text-lg font-semibold text-slate-900">{{ __('Ingredients') }}</h2>
+                <h2 class="text-lg font-semibold text-slate-900 dark:text-slate-100">{{ __('Ingredients') }}</h2>
                 @if ($canEdit)
                     <x-ui.button size="sm" variant="primary" type="button" wire:click="addIngredient">
                         {{ __('Add ingredient') }}

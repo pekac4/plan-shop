@@ -14,6 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'currency_symbol' => env('APP_CURRENCY_SYMBOL', '$'),
 
     /*
     |--------------------------------------------------------------------------

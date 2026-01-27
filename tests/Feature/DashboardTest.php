@@ -69,6 +69,12 @@ test('dashboard shows last month summaries', function () {
         'price' => 12.5,
     ]);
 
+    ShoppingListItem::factory()->for($user)->create([
+        'range_start' => '2025-11-28',
+        'range_end' => '2025-12-03',
+        'price' => 5.0,
+    ]);
+
     $customItem = CustomShoppingItem::factory()->for($user)->create([
         'name' => 'Coffee',
         'price' => 4.0,
@@ -144,9 +150,9 @@ test('dashboard shows last month summaries', function () {
                 ->selectRaw('count(distinct copies.user_id)')
                 ->whereColumn('copies.original_recipe_id', 'recipes.id')
                 ->whereColumn('copies.user_id', '!=', 'recipes.user_id');
-        }, 'stars')
+        }, 'saves_count')
         ->whereKey($starRecipeOne->id)
-        ->value('stars');
+        ->value('saves_count');
 
     $starTwoCount = Recipe::query()
         ->selectSub(function ($subQuery): void {
@@ -154,12 +160,12 @@ test('dashboard shows last month summaries', function () {
                 ->selectRaw('count(distinct copies.user_id)')
                 ->whereColumn('copies.original_recipe_id', 'recipes.id')
                 ->whereColumn('copies.user_id', '!=', 'recipes.user_id');
-        }, 'stars')
+        }, 'saves_count')
         ->whereKey($starRecipeTwo->id)
-        ->value('stars');
+        ->value('saves_count');
 
     expect((int) $starOneCount)->toBe(2);
     expect((int) $starTwoCount)->toBe(1);
-    $response->assertSee('Approx. $20.5');
+    $response->assertSee('Approx. $25.5');
     $response->assertSee('md:col-span-3');
 });
