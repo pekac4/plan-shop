@@ -2,14 +2,20 @@
     "agents": [
         "codex",
         "copilot",
-        "phpstorm"
+        "junie",
+        "claude_code"
     ],
-    "editors": [
-        "codex",
-        "phpstorm"
-    ],
-    "guidelines": [
+    "guidelines": true,
+    "herd_mcp": false,
+    "mcp": true,
+    "packages": [
         "laravel/fortify"
     ],
-    "sail": true
+    "sail": true,
+    "skills": [
+        "fluxui-development",
+        "livewire-development",
+        "pest-testing",
+        "tailwindcss-development"
+    ]
 }
