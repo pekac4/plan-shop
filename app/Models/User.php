@@ -27,6 +27,7 @@ class User extends Authenticatable
         'email_verified_at',
         'password',
         'avatar_path',
+        'locale',
     ];
 
     /**

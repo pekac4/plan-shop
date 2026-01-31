@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Plan&Shop</title>
+        <title>{{ __('Plan&Shop') }}</title>
 
         <link rel="icon" href="/favicon.ico" sizes="any">
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -23,13 +23,14 @@
                 <div class="flex items-center gap-3 text-sm">
                     <a class="font-medium text-slate-700 hover:text-slate-900" href="{{ route('login') }}">{{ __('Log in') }}</a>
                     <x-ui.button variant="primary" :href="route('register')">{{ __('Get started free') }}</x-ui.button>
+                    <x-locale-switcher />
                 </div>
             </header>
 
             <section class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
                 <div class="space-y-6">
                     <div class="space-y-3">
-                        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600">Plan&Shop</p>
+                        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-600">{{ __('Plan&Shop') }}</p>
                         <h1 class="text-4xl font-semibold text-slate-900 sm:text-5xl">
                             {{ __('Plan meals. Shop smarter. Cook better.') }}
                         </h1>

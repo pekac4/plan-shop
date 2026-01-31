@@ -49,6 +49,7 @@ class GoogleAuthController extends Controller
                 'google_id' => $socialUser->getId(),
                 'password' => Hash::make(Str::password(32)),
                 'email_verified_at' => now(),
+                'locale' => app()->getLocale(),
             ]);
         } else {
             $user->forceFill([
