@@ -373,13 +373,16 @@ new class extends Component
                     class="h-48 w-full rounded-xl object-cover"
                 />
             @elseif ($recipe->cover_image_url)
-                <a href="{{ $recipe->cover_image_url }}" class="block" target="_blank" rel="noopener">
-                    <img
-                        src="{{ $recipe->cover_image_url }}"
-                        alt="{{ __('Cover image') }}"
-                        class="h-48 w-full rounded-xl object-cover"
-                    />
-                </a>
+                <x-ui.recipe-image
+                    :id="'recipe-edit-image-'.$recipe->id"
+                    :title="$recipe->title"
+                    :image="$recipe->cover_image_url"
+                    :thumbnail="$recipe->cover_thumbnail_url"
+                    emoji="🥬"
+                    container-class="h-48 w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900"
+                    image-class="h-48 w-full object-cover"
+                    placeholder-class="text-3xl"
+                />
             @endif
 
             @if ($canEdit && $recipe->cover_image_path)

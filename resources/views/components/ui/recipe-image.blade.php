@@ -12,6 +12,7 @@
 @php
     $dialogId = $id;
     $thumbnailUrl = $thumbnail ?: $image;
+    $modalImage = $image ?: $thumbnailUrl;
 @endphp
 
 <div class="{{ $containerClass }}">
@@ -31,24 +32,26 @@
     @endif
 </div>
 
-@if ($image)
-    <dialog id="{{ $dialogId }}" class="m-auto w-full max-w-4xl rounded-2xl bg-transparent p-0 backdrop:bg-black/40">
-        <div class="relative max-h-[85vh] w-full">
+@if ($thumbnailUrl)
+    <dialog
+        id="{{ $dialogId }}"
+        class="fixed inset-0 z-50 m-auto w-full max-w-none border-0 bg-transparent p-4 backdrop:bg-black/50 backdrop:backdrop-blur-xs"
+    >
+        <div class="relative mx-auto flex max-h-[85vh] w-full max-w-5xl items-center justify-center overflow-hidden rounded-2xl bg-white shadow-2xl dark:bg-slate-900">
             <img
-                src="{{ $image }}"
+                src="{{ $modalImage }}"
                 alt="{{ $title }}"
-                class="h-full w-full rounded-2xl object-contain shadow-lg"
+                class="max-h-[85vh] w-full object-contain"
                 loading="lazy"
             />
-            <form method="dialog">
-                <button
-                    type="submit"
-                    class="absolute -top-4 -right-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 shadow hover:text-slate-900 dark:bg-slate-800 dark:text-slate-200 dark:hover:text-white"
-                    aria-label="{{ __('Close') }}"
-                >
-                    ✕
-                </button>
-            </form>
+            <button
+                type="button"
+                class="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-lg ring-1 ring-black/10 backdrop-blur hover:bg-white hover:text-slate-900 dark:bg-slate-800/90 dark:text-slate-100 dark:ring-white/10 dark:hover:bg-slate-800"
+                aria-label="{{ __('Close') }}"
+                onclick="document.getElementById('{{ $dialogId }}').close()"
+            >
+                ✕
+            </button>
         </div>
     </dialog>
 @endif
