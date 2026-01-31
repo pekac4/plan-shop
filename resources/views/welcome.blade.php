@@ -49,17 +49,19 @@
                         <div class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                             {{ __('Recipe of the Month') }}
                         </div>
-                        <div class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
-                            @if ($recipeOfMonth?->cover_image_url)
-                                <img
-                                    class="h-48 w-full object-cover"
-                                    src="{{ $recipeOfMonth->cover_image_url }}"
-                                    alt="{{ $recipeOfMonth->title }}"
-                                />
-                            @else
-                                <div class="flex h-48 items-center justify-center text-3xl">🥬</div>
-                            @endif
-                        </div>
+                        @php
+                            $recipeImageId = $recipeOfMonth?->id ? 'home-recipe-image-'.$recipeOfMonth->id : 'home-recipe-image';
+                        @endphp
+                        <x-ui.recipe-image
+                            :id="$recipeImageId"
+                            :title="$recipeOfMonth?->title"
+                            :image="$recipeOfMonth?->cover_image_url"
+                            :thumbnail="$recipeOfMonth?->cover_thumbnail_url"
+                            emoji="🥬"
+                            container-class="overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
+                            image-class="h-48 w-full object-cover"
+                            placeholder-class="text-3xl"
+                        />
                         <div class="space-y-2">
                             <p class="text-sm font-medium text-emerald-700">{{ $monthLabel }}</p>
                             <h2 class="text-2xl font-semibold text-slate-900">

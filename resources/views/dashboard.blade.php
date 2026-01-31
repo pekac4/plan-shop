@@ -82,21 +82,13 @@
                         @forelse ($topCommunityRecipes as $entry)
                             <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 py-2 last:border-b-0 dark:border-slate-700">
                                 <div class="flex items-start gap-3">
-                                    <div class="h-12 w-14 overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
-                                        @if ($entry->recipe?->cover_thumbnail_url && $entry->recipe?->cover_image_url)
-                                            <button type="button" class="block h-full w-full" onclick="document.getElementById('community-recipe-image-{{ $entry->recipe->id }}').showModal()">
-                                                <img
-                                                    src="{{ $entry->recipe->cover_thumbnail_url }}"
-                                                    alt="{{ $entry->recipe->title }}"
-                                                    class="h-full w-full object-cover"
-                                                />
-                                            </button>
-                                        @else
-                                            <div class="flex h-full w-full items-center justify-center text-lg">
-                                                🥬
-                                            </div>
-                                        @endif
-                                    </div>
+                                    <x-ui.recipe-image
+                                        :id="'community-recipe-image-'.$entry->recipe_id"
+                                        :title="$entry->recipe?->title"
+                                        :image="$entry->recipe?->cover_image_url"
+                                        :thumbnail="$entry->recipe?->cover_thumbnail_url"
+                                        emoji="🥬"
+                                    />
                                     <div class="flex flex-col gap-1">
                                         <div class="group relative inline-block">
                                             <a class="text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ $entry->recipe_id ? route('recipes.edit', $entry->recipe_id) : route('recipes.index') }}">
@@ -118,26 +110,6 @@
                                         </span>
                                     </div>
                                 </div>
-                                @if ($entry->recipe?->cover_image_url)
-                                    <dialog id="community-recipe-image-{{ $entry->recipe->id }}" class="m-auto w-full max-w-4xl rounded-2xl bg-transparent p-0 backdrop:bg-black/40">
-                                        <div class="relative max-h-[85vh] w-full">
-                                            <img
-                                                src="{{ $entry->recipe->cover_image_url }}"
-                                                alt="{{ $entry->recipe->title }}"
-                                                class="h-full w-full rounded-2xl object-contain shadow-lg"
-                                            />
-                                            <form method="dialog">
-                                                <button
-                                                    type="submit"
-                                                    class="absolute -top-4 -right-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 shadow hover:text-slate-900 dark:bg-slate-800 dark:text-slate-200 dark:hover:text-white"
-                                                    aria-label="{{ __('Close') }}"
-                                                >
-                                                    ✕
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </dialog>
-                                @endif
                                 <div class="flex items-center gap-2">
                                     <span class="text-xs text-slate-500 dark:text-slate-400">{{ $entry->uses }} {{ __('uses') }}</span>
                                     <span class="inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400" data-test="community-saves-{{ $entry->recipe_id }}">
@@ -213,41 +185,13 @@
                         @forelse ($topSavedRecipes as $recipe)
                             <div class="flex items-center justify-between gap-3">
                                 <div class="flex items-center gap-3">
-                                    <div class="h-12 w-14 overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
-                                        @if ($recipe->cover_thumbnail_url && $recipe->cover_image_url)
-                                            <button type="button" class="block h-full w-full" onclick="document.getElementById('top-recipe-image-{{ $recipe->id }}').showModal()">
-                                                <img
-                                                    src="{{ $recipe->cover_thumbnail_url }}"
-                                                    alt="{{ $recipe->title }}"
-                                                    class="h-full w-full object-cover"
-                                                />
-                                            </button>
-                                        @else
-                                            <div class="flex h-full w-full items-center justify-center text-lg">
-                                                🥕
-                                            </div>
-                                        @endif
-                                    </div>
-                                    @if ($recipe->cover_image_url)
-                                        <dialog id="top-recipe-image-{{ $recipe->id }}" class="m-auto w-full max-w-4xl rounded-2xl bg-transparent p-0 backdrop:bg-black/40">
-                                            <div class="relative max-h-[85vh] w-full">
-                                                <img
-                                                    src="{{ $recipe->cover_image_url }}"
-                                                    alt="{{ $recipe->title }}"
-                                                    class="h-full w-full rounded-2xl object-contain shadow-lg"
-                                                />
-                                                <form method="dialog">
-                                                    <button
-                                                        type="submit"
-                                                        class="absolute -top-4 -right-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 shadow hover:text-slate-900 dark:bg-slate-800 dark:text-slate-200 dark:hover:text-white"
-                                                        aria-label="{{ __('Close') }}"
-                                                    >
-                                                        ✕
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </dialog>
-                                    @endif
+                                    <x-ui.recipe-image
+                                        :id="'top-recipe-image-'.$recipe->id"
+                                        :title="$recipe->title"
+                                        :image="$recipe->cover_image_url"
+                                        :thumbnail="$recipe->cover_thumbnail_url"
+                                        emoji="🥕"
+                                    />
                                     <a class="text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ $recipe->id ? route('recipes.edit', $recipe->id) : route('recipes.index') }}">
                                         {{ $recipe->title }}
                                     </a>

@@ -193,20 +193,17 @@ new class extends Component
             @forelse ($this->recipes as $recipe)
                 <x-ui.card class="p-4">
                     <div class="flex flex-wrap items-start justify-between gap-3">
-                            <div class="flex items-start gap-4">
-                            <div class="h-20 w-24 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
-                                @if ($recipe->cover_thumbnail_url)
-                                    <img
-                                        src="{{ $recipe->cover_thumbnail_url }}"
-                                        alt="{{ $recipe->title }}"
-                                        class="h-full w-full object-cover"
-                                    />
-                                @else
-                                    <div class="flex h-full w-full items-center justify-center text-xl">
-                                        🥬
-                                    </div>
-                                @endif
-                            </div>
+                        <div class="flex items-start gap-4">
+                            <x-ui.recipe-image
+                                :id="'recipes-index-image-'.$recipe->id"
+                                :title="$recipe->title"
+                                :image="$recipe->cover_image_url"
+                                :thumbnail="$recipe->cover_thumbnail_url"
+                                emoji="🥬"
+                                container-class="h-20 w-24 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900"
+                                image-class="h-full w-full object-cover"
+                                placeholder-class="text-xl"
+                            />
                             <div class="space-y-2">
                                 <div>
                                     <a class="text-lg font-semibold text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ route('recipes.edit', $recipe) }}">

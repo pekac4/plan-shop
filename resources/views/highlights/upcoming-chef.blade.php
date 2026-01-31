@@ -52,29 +52,29 @@
 
                     <div class="mt-4 grid gap-3">
                         @foreach ($leaderRecipes as $recipe)
-                            <a
-                                href="{{ route('recipes.edit', $recipe->id) }}"
-                                class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 transition hover:border-violet-200 hover:bg-violet-50/40 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-violet-400/40 dark:hover:bg-slate-800"
-                            >
-                                <div class="h-14 w-16 overflow-hidden rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
-                                    @if ($recipe->cover_thumbnail_url)
-                                        <img
-                                            src="{{ $recipe->cover_thumbnail_url }}"
-                                            alt="{{ $recipe->title }}"
-                                            class="h-full w-full object-cover"
-                                        />
-                                    @else
-                                        <div class="flex h-full w-full items-center justify-center text-lg">🥬</div>
-                                    @endif
-                                </div>
+                            <div class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 transition hover:border-violet-200 hover:bg-violet-50/40 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-violet-400/40 dark:hover:bg-slate-800">
+                                <x-ui.recipe-image
+                                    :id="'upcoming-recipe-image-'.$recipe->id"
+                                    :title="$recipe->title"
+                                    :image="$recipe->cover_image_url"
+                                    :thumbnail="$recipe->cover_thumbnail_url"
+                                    emoji="🥬"
+                                    container-class="h-14 w-16 overflow-hidden rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900"
+                                    image-class="h-full w-full object-cover"
+                                    placeholder-class="text-lg"
+                                />
                                 <div class="flex-1">
-                                    <p class="text-sm font-medium text-slate-900 dark:text-slate-100">{{ $recipe->title }}</p>
+                                    <a class="text-sm font-medium text-slate-900 hover:text-violet-700 dark:text-slate-100 dark:hover:text-violet-300" href="{{ route('recipes.edit', $recipe->id) }}">
+                                        {{ $recipe->title }}
+                                    </a>
                                     <p class="text-xs text-slate-500 dark:text-slate-400">
                                         {{ $recipe->last_month_copies ?? 0 }} {{ __('copies last month') }}
                                     </p>
                                 </div>
-                                <flux:icon.chevron-right class="size-4 text-slate-400 dark:text-slate-500" />
-                            </a>
+                                <a class="inline-flex items-center text-slate-400 hover:text-violet-600 dark:text-slate-500 dark:hover:text-violet-300" href="{{ route('recipes.edit', $recipe->id) }}" aria-label="{{ __('View recipe') }}">
+                                    <flux:icon.chevron-right class="size-4" />
+                                </a>
+                            </div>
                         @endforeach
                     </div>
                 </div>

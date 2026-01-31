@@ -138,6 +138,7 @@ test('dashboard shows last month summaries', function () {
     $response->assertOk();
     $response->assertSee('Pasta');
     $response->assertSee('Egg');
+    $response->assertSee('4 pcs');
     $response->assertSee('Public Stew');
     $response->assertSee($otherUser->name);
     $response->assertSee('Ava Chef');

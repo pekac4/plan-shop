@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
 
 it('shows the upcoming chef page', function () {
     $user = User::factory()->create();
