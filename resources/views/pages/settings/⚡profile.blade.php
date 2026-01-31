@@ -19,6 +19,7 @@ new class extends Component {
 
     public string $name = '';
     public string $email = '';
+    public string $locale = 'en';
     public $avatar = null;
 
     /**
@@ -28,6 +29,7 @@ new class extends Component {
     {
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
+        $this->locale = Auth::user()->locale ?? config('app.locale');
     }
 
     /**
@@ -39,6 +41,13 @@ new class extends Component {
 
         $validated = $this->validate(array_merge(
             $this->profileRules($user->id),
+            [
+                'locale' => [
+                    'required',
+                    'string',
+                    Rule::in(config('app.supported_locales', ['en', 'sr'])),
+                ],
+            ],
             ['avatar' => ['nullable', File::image()->max(2 * 1024)]],
         ));
 
@@ -51,6 +60,11 @@ new class extends Component {
         $user->save();
 
         $this->storeAvatar($user);
+
+        app()->setLocale($this->locale);
+        if (request()->hasSession()) {
+            request()->session()->put('locale', $this->locale);
+        }
 
         $this->dispatch('profile-updated', name: $user->name);
     }
@@ -150,6 +164,15 @@ new class extends Component {
 
             <div class="space-y-4">
                 <x-ui.input wire:model="email" name="email" :label="__('Email')" type="email" required autocomplete="email" />
+
+                <flux:field>
+                    <flux:label>{{ __('Default language') }}</flux:label>
+                    <flux:select wire:model="locale" name="locale">
+                        <flux:select.option value="en">{{ __('English') }}</flux:select.option>
+                        <flux:select.option value="sr">{{ __('Serbian') }}</flux:select.option>
+                    </flux:select>
+                    <flux:error name="locale" />
+                </flux:field>
 
                 @if ($this->hasUnverifiedEmail)
                     <div class="text-sm text-slate-600">
