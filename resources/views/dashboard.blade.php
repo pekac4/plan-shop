@@ -9,6 +9,9 @@
                 :url="route('home')"
                 :text="__('Plan&Shop makes meal planning simple. Join me!')"
                 :label="__('Share the app')"
+                class="self-start justify-end"
+                label-class="text-slate-400 dark:text-slate-500"
+                icons-class="gap-1"
             />
         </div>
 

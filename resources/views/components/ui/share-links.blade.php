@@ -2,6 +2,8 @@
     'url',
     'text' => __('Check out Plan&Shop.'),
     'label' => null,
+    'labelClass' => '',
+    'iconsClass' => '',
 ])
 
 @php
@@ -35,14 +37,19 @@
     ];
 @endphp
 
-<div class="flex flex-wrap items-center gap-2">
+@php
+    $labelClasses = trim('text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400 '.$labelClass);
+    $iconsClasses = trim('flex items-center gap-2 '.$iconsClass);
+@endphp
+
+<div {{ $attributes->merge(['class' => 'flex flex-wrap items-center gap-3']) }}>
     @if ($label)
-        <span class="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+        <span class="{{ $labelClasses }}">
             {{ $label }}
         </span>
     @endif
 
-    <div class="flex items-center gap-2">
+    <div class="{{ $iconsClasses }}">
         @foreach ($links as $link)
             <a
                 href="{{ $link['href'] }}"
