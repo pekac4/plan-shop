@@ -169,4 +169,9 @@ test('dashboard shows last month summaries', function () {
     expect((int) $starTwoCount)->toBe(1);
     $response->assertSee('Approx. $25.5');
     $response->assertSee('md:col-span-3');
+    $response->assertSee('Share the app');
+    $response->assertSee('x.com/intent/tweet');
+    $response->assertSee('facebook.com/sharer/sharer.php');
+    $response->assertSee('instagram.com/?url=');
+    $response->assertSee('mail.google.com/mail/?view=cm');
 });

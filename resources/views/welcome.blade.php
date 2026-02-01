@@ -42,6 +42,11 @@
                         <x-ui.button variant="primary" :href="route('register')">{{ __('Get started free') }}</x-ui.button>
                         <x-ui.button variant="secondary" :href="route('recipes.index')">{{ __('Browse recipes') }}</x-ui.button>
                     </div>
+                    <x-ui.share-links
+                        :url="route('home')"
+                        :text="__('Plan&Shop makes meal planning simple. Join me!')"
+                        :label="__('Share the app')"
+                    />
                 </div>
 
                 <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
@@ -88,6 +93,11 @@
                                 {{ __('View recipe') }}
                             </x-ui.button>
                         @endif
+                        <x-ui.share-links
+                            :url="$recipeOfMonth ? route('recipes.edit', $recipeOfMonth) : route('recipes.index')"
+                            :text="$recipeOfMonth?->title ? __('Try this recipe: :title', ['title' => $recipeOfMonth->title]) : __('Try this recipe on Plan&Shop')"
+                            :label="__('Share this recipe')"
+                        />
                     </div>
                 </div>
             </section>

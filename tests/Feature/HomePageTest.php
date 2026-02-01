@@ -29,4 +29,10 @@ it('shows the marketing hero and recipe of the month', function () {
     $response->assertSee('Recipe of the Month');
     $response->assertSee($recipe->title);
     $response->assertSee('@maria_k');
+    $response->assertSee('Share the app');
+    $response->assertSee('Share this recipe');
+    $response->assertSee('x.com/intent/tweet');
+    $response->assertSee('facebook.com/sharer/sharer.php');
+    $response->assertSee('instagram.com/?url=');
+    $response->assertSee('mail.google.com/mail/?view=cm');
 });

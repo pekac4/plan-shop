@@ -1,8 +1,15 @@
 <x-layouts::app :title="__('Dashboard')">
     <div class="space-y-6">
-        <div class="space-y-1">
-            <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">{{ __('Dashboard') }}</h1>
-            <p class="text-sm text-slate-600 dark:text-slate-300">{{ __('Quick access to your meal planning tools.') }}</p>
+        <div class="flex flex-wrap items-start justify-between gap-4">
+            <div class="space-y-1">
+                <h1 class="text-2xl font-semibold text-slate-900 dark:text-slate-100">{{ __('Dashboard') }}</h1>
+                <p class="text-sm text-slate-600 dark:text-slate-300">{{ __('Quick access to your meal planning tools.') }}</p>
+            </div>
+            <x-ui.share-links
+                :url="route('home')"
+                :text="__('Plan&Shop makes meal planning simple. Join me!')"
+                :label="__('Share the app')"
+            />
         </div>
 
         <div class="grid gap-4 md:grid-cols-3">
