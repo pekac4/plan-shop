@@ -343,6 +343,12 @@ new class extends Component
         </div>
     </div>
 
+    <x-ui.share-links
+        :url="route('recipes.edit', $recipe)"
+        :text="__('Try this recipe: :title', ['title' => $recipe->title])"
+        :label="__('Share this recipe')"
+    />
+
     <form wire:submit="save" class="space-y-6">
         <x-ui.card class="p-6 space-y-6">
             <div class="grid gap-4 md:grid-cols-2">
