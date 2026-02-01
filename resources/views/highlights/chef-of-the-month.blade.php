@@ -51,17 +51,16 @@
             <x-ui.card class="overflow-hidden">
                 <div class="grid gap-6 p-6 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
                     <div class="space-y-4">
-                        <div class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
-                            @if ($recipe->cover_image_url)
-                                <img
-                                    src="{{ $recipe->cover_image_url }}"
-                                    alt="{{ $recipe->title }}"
-                                    class="h-64 w-full object-cover md:h-72"
-                                />
-                            @else
-                                <div class="flex h-64 items-center justify-center text-4xl">🥬</div>
-                            @endif
-                        </div>
+                        <x-ui.recipe-image
+                            :id="'chef-recipe-image-'.$recipe->id"
+                            :title="$recipe->title"
+                            :image="$recipe->cover_image_url"
+                            :thumbnail="$recipe->cover_thumbnail_url"
+                            emoji="🥬"
+                            container-class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900"
+                            image-class="h-64 w-full object-cover md:h-72"
+                            placeholder-class="text-4xl"
+                        />
 
                         <div class="space-y-2">
                             <h2 class="text-xl font-semibold text-slate-900 dark:text-slate-100">{{ $recipe->title }}</h2>

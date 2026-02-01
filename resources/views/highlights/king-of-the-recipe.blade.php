@@ -50,29 +50,29 @@
 
                     <div class="mt-4 grid gap-3">
                         @forelse ($leaderRecipes as $recipe)
-                            <a
-                                href="{{ route('recipes.edit', $recipe->id) }}"
-                                class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 transition hover:border-amber-200 hover:bg-amber-50/40 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-amber-400/40 dark:hover:bg-slate-800"
-                            >
-                                <div class="h-14 w-16 overflow-hidden rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900">
-                                    @if ($recipe->cover_thumbnail_url)
-                                        <img
-                                            src="{{ $recipe->cover_thumbnail_url }}"
-                                            alt="{{ $recipe->title }}"
-                                            class="h-full w-full object-cover"
-                                        />
-                                    @else
-                                        <div class="flex h-full w-full items-center justify-center text-lg">🥬</div>
-                                    @endif
-                                </div>
+                            <div class="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 transition hover:border-amber-200 hover:bg-amber-50/40 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-amber-400/40 dark:hover:bg-slate-800">
+                                <x-ui.recipe-image
+                                    :id="'king-recipe-image-'.$recipe->id"
+                                    :title="$recipe->title"
+                                    :image="$recipe->cover_image_url"
+                                    :thumbnail="$recipe->cover_thumbnail_url"
+                                    emoji="🥬"
+                                    container-class="h-14 w-16 overflow-hidden rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-900"
+                                    image-class="h-full w-full object-cover"
+                                    placeholder-class="text-lg"
+                                />
                                 <div class="flex-1">
-                                    <p class="text-sm font-medium text-slate-900 dark:text-slate-100">{{ $recipe->title }}</p>
+                                    <a class="text-sm font-medium text-slate-900 hover:text-amber-700 dark:text-slate-100 dark:hover:text-amber-300" href="{{ route('recipes.edit', $recipe->id) }}">
+                                        {{ $recipe->title }}
+                                    </a>
                                     <p class="text-xs text-slate-500 dark:text-slate-400">
                                         {{ $recipe->stars ?? 0 }} {{ __('stars') }}
                                     </p>
                                 </div>
-                                <flux:icon.chevron-right class="size-4 text-slate-400 dark:text-slate-500" />
-                            </a>
+                                <a class="inline-flex items-center text-slate-400 hover:text-amber-600 dark:text-slate-500 dark:hover:text-amber-300" href="{{ route('recipes.edit', $recipe->id) }}" aria-label="{{ __('View recipe') }}">
+                                    <flux:icon.chevron-right class="size-4" />
+                                </a>
+                            </div>
                         @empty
                             <p class="text-sm text-slate-500 dark:text-slate-400">{{ __('No recipes yet.') }}</p>
                         @endforelse

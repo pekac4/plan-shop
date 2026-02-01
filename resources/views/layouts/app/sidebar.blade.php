@@ -4,9 +4,6 @@
         @include('partials.head')
     </head>
     <body class="min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
-        <div class="absolute right-4 top-4 z-30 hidden lg:flex">
-            <x-locale-switcher />
-        </div>
         <flux:sidebar sticky collapsible="mobile" class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
             <flux:sidebar.header>
                 <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" />

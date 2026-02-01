@@ -87,6 +87,7 @@ class HighlightRecipeSelector
             'name' => 'Zucchini',
             'quantity' => 2,
             'unit' => 'pcs',
+            'price' => 1.0,
         ]);
 
         return $recipe->load([
