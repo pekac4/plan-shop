@@ -2,6 +2,17 @@
 
 Plan&Shop is a Laravel 12 meal-planning app with recipes, meal plans, shopping lists, and community highlights.
 
+## Features
+
+- Social sharing (X, Facebook, Instagram, Gmail) for the app and recipes
+- Authentication with profile support
+- Recipe management (create, edit, duplicate, delete) and recipe exchange via copying
+- Meal planning with calendar entries
+- Auto-generated shopping lists from meal plans
+- Dashboard with highlights and top five ingredients
+- Community highlights (Chef of the Month, King of the Recipe, Upcoming Chef)
+- Locale switching (EN/SR)
+
 ## Stack
 
 - PHP 8.5 (Laravel 12)
@@ -80,7 +91,7 @@ vendor/bin/sail artisan boost:mcp
 
 ## AI-assisted code
 
-Some code in this repository may be generated or edited with the Codex CLI agent. Please review changes carefully before merging and keep PR descriptions explicit about AI-assisted changes.
+All code in this repository may include changes generated or edited with the Codex AI agent. Please review changes carefully before merging and keep PR descriptions explicit about AI-assisted changes.
 
 ## Contributing
 
