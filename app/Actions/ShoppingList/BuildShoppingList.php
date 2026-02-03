@@ -196,8 +196,15 @@ class BuildShoppingList
     {
         return ShoppingListCustomItem::query()
             ->where('user_id', $user->id)
-            ->where('range_start', $rangeStart->toDateString())
-            ->where('range_end', $rangeEnd->toDateString())
+            ->when(
+                \Illuminate\Support\Facades\DB::getDriverName() === 'sqlite',
+                fn ($query) => $query
+                    ->whereDate('range_start', $rangeStart->toDateString())
+                    ->whereDate('range_end', $rangeEnd->toDateString()),
+                fn ($query) => $query
+                    ->where('range_start', $rangeStart->toDateString())
+                    ->where('range_end', $rangeEnd->toDateString()),
+            )
             ->with('customItem')
             ->get()
             ->map(function (ShoppingListCustomItem $item): array {

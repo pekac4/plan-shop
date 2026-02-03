@@ -46,8 +46,8 @@ class ShoppingListCustomItem extends Model
     protected function casts(): array
     {
         return [
-            'range_start' => 'date',
-            'range_end' => 'date',
+            'range_start' => 'date:Y-m-d',
+            'range_end' => 'date:Y-m-d',
             'quantity' => 'decimal:2',
             'price' => 'decimal:2',
             'checked_at' => 'datetime',
