@@ -80,6 +80,17 @@ vendor/bin/sail artisan test --compact
 vendor/bin/sail bin pint --dirty
 ```
 
+## Git hooks (local)
+
+Install hooks (pre-commit runs Pint fix, Larastan, and tests):
+
+```bash
+composer hooks:install
+```
+
+Notes:
+- The hook runs Pint in fix mode and will stage all tracked modifications with `git add -u` if Pint changes tracked files.
+- If you rely on partial staging, commit only the intended changes to avoid accidentally staging extra tracked edits.
 ## Laravel Boost (MCP)
 
 This repo includes Laravel Boost tooling. To install and run it:

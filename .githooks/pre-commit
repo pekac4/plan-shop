@@ -1,0 +1,32 @@
+#!/bin/sh
+set -eu
+
+PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+cd "$PROJECT_ROOT"
+
+if [ ! -f vendor/autoload.php ]; then
+    echo "Composer vendor directory missing. Run vendor/bin/sail composer install."
+    exit 1
+fi
+
+echo "Running Pint (fix mode)..."
+PRE_PINT_DIFF_HASH="$(git diff --binary | git hash-object --stdin)"
+vendor/bin/sail php vendor/bin/pint
+POST_PINT_DIFF_HASH="$(git diff --binary | git hash-object --stdin)"
+
+if [ "$PRE_PINT_DIFF_HASH" != "$POST_PINT_DIFF_HASH" ] && [ -n "$(git diff --name-only)" ]; then
+    git add -u
+    echo "Pint applied fixes and staged them."
+fi
+
+echo "Running Larastan..."
+if ! vendor/bin/sail php vendor/bin/phpstan analyse -c phpstan.neon; then
+    echo "Larastan failed. Aborting commit."
+    exit 1
+fi
+
+echo "Running tests..."
+if ! vendor/bin/sail artisan test --compact; then
+    echo "Tests failed. Aborting commit."
+    exit 1
+fi
