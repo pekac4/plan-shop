@@ -37,12 +37,13 @@ jobs:
           php artisan key:generate
           mkdir -p database
           touch database/database.sqlite
+          php artisan migrate --no-interaction --force
 
       - name: Pint (check)
         run: vendor/bin/pint --test
 
       - name: Larastan
-        run: vendor/bin/phpstan analyse -c phpstan.neon --ansi
+        run: vendor/bin/phpstan analyse -c phpstan.neon --no-ansi
 
       - name: Tests
         run: php artisan test --colors=never
