@@ -6,7 +6,20 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $range_start
+ * @property string $range_end
+ * @property string $name
+ * @property string|null $unit
+ * @property string|null $quantity
+ * @property string|null $price
+ * @property \Illuminate\Support\Carbon|null $checked_at
+ * @property User $user
+ */
 class ShoppingListItem extends Model
 {
     /** @use HasFactory<\Database\Factories\ShoppingListItemFactory> */
@@ -36,8 +49,8 @@ class ShoppingListItem extends Model
     protected function casts(): array
     {
         return [
-            'range_start' => 'date',
-            'range_end' => 'date',
+            'range_start' => 'date:Y-m-d',
+            'range_end' => 'date:Y-m-d',
             'quantity' => 'decimal:2',
             'price' => 'decimal:2',
             'checked_at' => 'datetime',
@@ -46,6 +59,12 @@ class ShoppingListItem extends Model
 
     public function scopeForRange(Builder $query, string $rangeStart, string $rangeEnd): Builder
     {
+        if (DB::getDriverName() === 'sqlite') {
+            return $query
+                ->whereDate('range_start', $rangeStart)
+                ->whereDate('range_end', $rangeEnd);
+        }
+
         return $query
             ->where('range_start', $rangeStart)
             ->where('range_end', $rangeEnd);

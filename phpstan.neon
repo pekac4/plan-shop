@@ -1,0 +1,21 @@
+includes:
+  - vendor/larastan/larastan/extension.neon
+  - vendor/phpstan/phpstan-phpunit/extension.neon
+  - vendor/phpstan/phpstan-phpunit/rules.neon
+  - phpstan-baseline.neon
+
+parameters:
+  level: 5
+  paths:
+    - app
+    - config
+    - database
+    - routes
+    - tests
+  excludePaths:
+    - tests/Pest.php
+  ignoreErrors:
+    - message: '#Call to an undefined method PHPUnit\\Framework\\TestCase::#'
+      paths:
+        - tests
+  tmpDir: storage/framework/cache/phpstan

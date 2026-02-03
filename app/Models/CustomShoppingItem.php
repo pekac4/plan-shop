@@ -7,6 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $name
+ * @property string|null $price
+ * @property User $user
+ * @property \Illuminate\Database\Eloquent\Collection<int, ShoppingListCustomItem> $entries
+ */
 class CustomShoppingItem extends Model
 {
     /** @use HasFactory<\Database\Factories\CustomShoppingItemFactory> */

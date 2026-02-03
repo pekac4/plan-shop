@@ -1,0 +1,42 @@
+#!/bin/sh
+set -eu
+
+GREEN="\033[0;32m"
+RED="\033[0;31m"
+CYAN="\033[0;36m"
+YELLOW="\033[1;33m"
+RESET="\033[0m"
+
+PROJECT_ROOT="$(git rev-parse --show-toplevel)"
+cd "$PROJECT_ROOT"
+
+if [ ! -f vendor/autoload.php ]; then
+    echo "${RED}Composer vendor directory missing. Run vendor/bin/sail composer install.${RESET}"
+    exit 1
+fi
+
+echo "${CYAN}Running Pint...${RESET}"
+PRE_PINT_DIFF_HASH="$(git diff --binary | git hash-object --stdin)"
+vendor/bin/sail php vendor/bin/pint --ansi
+POST_PINT_DIFF_HASH="$(git diff --binary | git hash-object --stdin)"
+
+if [ "$PRE_PINT_DIFF_HASH" != "$POST_PINT_DIFF_HASH" ] && [ -n "$(git diff --name-only)" ]; then
+    git add -u
+    echo "${YELLOW}Pint fixed files and staged them.${RESET}"
+fi
+
+echo "${GREEN}Pint passed${RESET}"
+
+echo "${CYAN}Running Larastan...${RESET}"
+if ! vendor/bin/sail php vendor/bin/phpstan analyse --ansi -c phpstan.neon; then
+    echo "${RED}Larastan failed. Aborting commit.${RESET}"
+    exit 1
+fi
+echo "${GREEN}Larastan passed${RESET}"
+
+echo "${CYAN}Running tests...${RESET}"
+if ! vendor/bin/sail artisan test --colors=always --compact; then
+    echo "${RED}Tests failed. Aborting commit.${RESET}"
+    exit 1
+fi
+echo "${GREEN}Tests passed${RESET}"
