@@ -46,7 +46,7 @@ it('shows only owned recipes on the recipes index', function () {
         ->assertDontSee('Public Recipe');
 });
 
-it('shows only view and delete actions for copied recipes from others', function () {
+it('shows only view actions for copied recipes from others', function () {
     $user = User::factory()->create();
     $other = User::factory()->create();
 
@@ -66,7 +66,7 @@ it('shows only view and delete actions for copied recipes from others', function
         ->set('ownership', 'copied')
         ->assertSee('Community Recipe')
         ->assertSee('View')
-        ->assertSee('Delete')
+        ->assertDontSee('Delete')
         ->assertDontSee('Edit')
         ->assertDontSee('Save as copy');
 });

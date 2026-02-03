@@ -48,7 +48,7 @@ new class extends Component {
                     Rule::in(config('app.supported_locales', ['en', 'sr'])),
                 ],
             ],
-            ['avatar' => ['nullable', File::image()->max(2 * 1024)]],
+            ['avatar' => ['nullable', File::image()->types(['jpg', 'jpeg', 'png', 'webp'])->max(2 * 1024)]],
         ));
 
         $user->fill($validated);

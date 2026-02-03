@@ -24,7 +24,7 @@ class RecipeLibraryService
             return;
         }
 
-        $copy = $recipe->replicate(['is_public']);
+        $copy = $recipe->replicate(['is_public', 'cover_image_path', 'cover_thumbnail_path']);
         $copy->original_recipe_id = $originalId;
         $copy->user_id = $user->id;
         $copy->title = $recipe->title;

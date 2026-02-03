@@ -3,6 +3,7 @@
 namespace App\Services\Auth;
 
 use App\Models\User;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -64,33 +65,87 @@ class GoogleAuthService
 
         Auth::login($user, true);
 
-        return redirect()->route('dashboard');
+        return redirect()->intended(route('dashboard'));
     }
 
     private function storeAvatar(User $user, string $avatarUrl): void
     {
-        $response = Http::timeout(5)->get($avatarUrl);
+        $avatarUrl = trim($avatarUrl);
+        $urlParts = parse_url($avatarUrl);
+
+        if (! is_array($urlParts) || ! isset($urlParts['scheme'], $urlParts['host'])) {
+            return;
+        }
+
+        $scheme = strtolower((string) $urlParts['scheme']);
+        $host = strtolower((string) $urlParts['host']);
+
+        if ($scheme !== 'https' || ! $this->isAllowedAvatarHost($host)) {
+            return;
+        }
+
+        try {
+            $response = Http::timeout(5)
+                ->connectTimeout(3)
+                ->accept('image/*')
+                ->withOptions(['allow_redirects' => false])
+                ->get($avatarUrl);
+        } catch (ConnectionException) {
+            return;
+        }
 
         if (! $response->successful()) {
             return;
         }
 
-        $contentType = $response->header('Content-Type');
-        if ($contentType === '') {
-            $contentType = 'image/jpeg';
+        $maxBytes = (int) config('services.google.avatar_max_bytes', 2 * 1024 * 1024);
+        $contentLengthHeader = $response->header('Content-Length');
+        $contentLength = is_numeric($contentLengthHeader) ? (int) $contentLengthHeader : 0;
+
+        if ($contentLength > 0 && $contentLength > $maxBytes) {
+            return;
         }
-        $extension = match (true) {
-            str_contains($contentType, 'png') => 'png',
-            str_contains($contentType, 'webp') => 'webp',
-            default => 'jpg',
+
+        $body = $response->body();
+
+        if ($body === '' || strlen($body) > $maxBytes) {
+            return;
+        }
+
+        $imageInfo = @getimagesizefromstring($body);
+        $mime = is_array($imageInfo) ? $imageInfo['mime'] : '';
+
+        $extension = match ($mime) {
+            'image/png' => 'png',
+            'image/webp' => 'webp',
+            'image/jpeg', 'image/jpg' => 'jpg',
+            default => null,
         };
+
+        if (! $extension) {
+            return;
+        }
 
         $path = 'avatars/'.Str::uuid().'.'.$extension;
 
-        Storage::disk('public')->put($path, $response->body());
+        Storage::disk('public')->put($path, $body);
 
         $user->forceFill([
             'avatar_path' => $path,
         ])->save();
+    }
+
+    private function isAllowedAvatarHost(string $host): bool
+    {
+        $host = Str::lower($host);
+
+        $allowedHosts = config('services.google.avatar_allowed_hosts', []);
+        if (in_array($host, $allowedHosts, true)) {
+            return true;
+        }
+
+        $allowedSuffix = (string) config('services.google.avatar_allowed_host_suffix', 'googleusercontent.com');
+
+        return $host === $allowedSuffix || Str::endsWith($host, '.'.$allowedSuffix);
     }
 }

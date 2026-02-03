@@ -26,3 +26,21 @@ it('allows users to upload an avatar', function () {
 
     Storage::disk('public')->assertExists($user->avatar_path);
 });
+
+it('rejects svg avatar uploads', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test('pages::settings.profile')
+        ->set('avatar', UploadedFile::fake()->create('avatar.svg', 10, 'image/svg+xml'))
+        ->set('name', $user->name)
+        ->set('email', $user->email)
+        ->call('updateProfileInformation')
+        ->assertHasErrors(['avatar']);
+
+    $user->refresh();
+
+    expect($user->avatar_path)->toBeNull();
+});

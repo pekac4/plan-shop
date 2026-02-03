@@ -36,6 +36,10 @@ class RecipePolicy
      */
     public function update(User $user, Recipe $recipe): bool
     {
+        if ($recipe->original_recipe_id !== null) {
+            return false;
+        }
+
         return $recipe->user_id === $user->id;
     }
 
@@ -44,6 +48,10 @@ class RecipePolicy
      */
     public function delete(User $user, Recipe $recipe): bool
     {
+        if ($recipe->original_recipe_id !== null) {
+            return false;
+        }
+
         return $recipe->user_id === $user->id;
     }
 

@@ -108,7 +108,7 @@ new class extends Component
 
         $isFromOther = $recipe->user_id !== Auth::id();
 
-        $copy = $recipe->replicate(['is_public']);
+        $copy = $recipe->replicate(['is_public', 'cover_image_path', 'cover_thumbnail_path']);
         if ($isFromOther) {
             $copy->original_recipe_id = $recipe->original_recipe_id ?? $recipe->id;
         }

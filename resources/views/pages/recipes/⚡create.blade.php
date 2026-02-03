@@ -47,7 +47,7 @@ new class extends Component
             'instructions' => ['required', 'string'],
             'sourceUrl' => ['nullable', 'url'],
             'isPublic' => ['boolean'],
-            'coverImage' => ['nullable', File::image()->max(5 * 1024)],
+            'coverImage' => ['nullable', File::image()->types(['jpg', 'jpeg', 'png', 'webp'])->max(5 * 1024)],
             'ingredients' => ['array'],
             'ingredients.*.name' => ['required', 'string', 'max:120'],
             'ingredients.*.quantity' => ['nullable', 'numeric', 'min:0'],

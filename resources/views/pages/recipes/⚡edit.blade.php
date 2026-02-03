@@ -80,7 +80,7 @@ new class extends Component
             'instructions' => ['required', 'string'],
             'sourceUrl' => ['nullable', 'url'],
             'isPublic' => ['boolean'],
-            'coverImage' => ['nullable', File::image()->max(5 * 1024)],
+            'coverImage' => ['nullable', File::image()->types(['jpg', 'jpeg', 'png', 'webp'])->max(5 * 1024)],
             'ingredients' => ['array'],
             'ingredients.*.name' => ['required', 'string', 'max:120'],
             'ingredients.*.quantity' => ['nullable', 'numeric', 'min:0'],
@@ -92,6 +92,10 @@ new class extends Component
 
     public function addIngredient(): void
     {
+        if ($this->rejectCopiedRecipeAction()) {
+            return;
+        }
+
         if (! $this->canEdit) {
             return;
         }
@@ -101,6 +105,10 @@ new class extends Component
 
     public function removeIngredient(int $index): void
     {
+        if ($this->rejectCopiedRecipeAction()) {
+            return;
+        }
+
         if (! $this->canEdit) {
             return;
         }
@@ -111,6 +119,10 @@ new class extends Component
 
     public function save(): void
     {
+        if ($this->rejectCopiedRecipeAction()) {
+            return;
+        }
+
         $this->authorize('update', $this->recipe);
 
         $this->ingredients = $this->normalizeIngredients();
@@ -147,7 +159,7 @@ new class extends Component
 
         $isFromOther = $this->recipe->user_id !== Auth::id();
 
-        $copy = $this->recipe->replicate(['is_public']);
+        $copy = $this->recipe->replicate(['is_public', 'cover_image_path', 'cover_thumbnail_path']);
         if ($isFromOther) {
             $copy->original_recipe_id = $this->recipe->original_recipe_id ?? $this->recipe->id;
         }
@@ -168,6 +180,10 @@ new class extends Component
 
     public function deleteRecipe(): void
     {
+        if ($this->rejectCopiedRecipeAction()) {
+            return;
+        }
+
         $this->authorize('delete', $this->recipe);
 
         $this->recipe->delete();
@@ -177,6 +193,10 @@ new class extends Component
 
     public function removeCoverImage(): void
     {
+        if ($this->rejectCopiedRecipeAction()) {
+            return;
+        }
+
         if (! $this->canEdit) {
             return;
         }
@@ -303,6 +323,17 @@ new class extends Component
             'cover_thumbnail_path' => $thumbnailPath,
         ])->save();
     }
+
+    protected function rejectCopiedRecipeAction(): bool
+    {
+        if (! $this->recipe->original_recipe_id) {
+            return false;
+        }
+
+        $this->addError('recipe', __('Copied recipes are read-only.'));
+
+        return true;
+    }
 };
 ?>
 
@@ -342,6 +373,10 @@ new class extends Component
             @endif
         </div>
     </div>
+
+    @error('recipe')
+        <flux:callout variant="danger" icon="x-circle" heading="{{ $message }}"/>
+    @enderror
 
     <x-ui.share-links
         :url="route('recipes.edit', $recipe)"

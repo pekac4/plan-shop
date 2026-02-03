@@ -109,19 +109,41 @@ class Recipe extends Model
 
     public function getCoverImageUrlAttribute(): ?string
     {
-        if (! $this->cover_image_path) {
+        $path = $this->cover_image_path;
+
+        if ($this->original_recipe_id) {
+            /** @var Recipe|null $original */
+            $original = $this->relationLoaded('originalRecipe')
+                ? $this->originalRecipe
+                : $this->originalRecipe()->first();
+
+            $path = $original?->cover_image_path ?: $path;
+        }
+
+        if (! $path) {
             return null;
         }
 
-        return \Illuminate\Support\Facades\Storage::disk('public')->url($this->cover_image_path);
+        return \Illuminate\Support\Facades\Storage::disk('public')->url($path);
     }
 
     public function getCoverThumbnailUrlAttribute(): ?string
     {
-        if (! $this->cover_thumbnail_path) {
+        $path = $this->cover_thumbnail_path;
+
+        if ($this->original_recipe_id) {
+            /** @var Recipe|null $original */
+            $original = $this->relationLoaded('originalRecipe')
+                ? $this->originalRecipe
+                : $this->originalRecipe()->first();
+
+            $path = $original?->cover_thumbnail_path ?: $path;
+        }
+
+        if (! $path) {
             return null;
         }
 
-        return \Illuminate\Support\Facades\Storage::disk('public')->url($this->cover_thumbnail_path);
+        return \Illuminate\Support\Facades\Storage::disk('public')->url($path);
     }
 }

@@ -92,6 +92,7 @@ class DashboardRepository
                         ->selectSub($this->recipeSavesCountSubquery(), 'saves_count')
                         ->with('ingredients:id,recipe_id,name');
                 },
+                'recipe.originalRecipe:id,cover_image_path,cover_thumbnail_path',
                 'recipe.user:id,name',
             ])
             ->limit(self::TOP_LIMIT)

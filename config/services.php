@@ -39,6 +39,14 @@ return [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT', '/auth/google/callback'),
+        'avatar_allowed_host_suffix' => 'googleusercontent.com',
+        'avatar_allowed_hosts' => [
+            'lh3.googleusercontent.com',
+            'lh4.googleusercontent.com',
+            'lh5.googleusercontent.com',
+            'lh6.googleusercontent.com',
+        ],
+        'avatar_max_bytes' => 2 * 1024 * 1024,
     ],
 
 ];
