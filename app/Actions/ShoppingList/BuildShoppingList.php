@@ -17,6 +17,7 @@ class BuildShoppingList
      */
     public function handle(User $user, CarbonImmutable $rangeStart, CarbonImmutable $rangeEnd): array
     {
+        /** @var Collection<int, MealPlanEntry> $entries */
         $entries = MealPlanEntry::query()
             ->where('user_id', $user->id)
             ->whereBetween('date', [$rangeStart->toDateString(), $rangeEnd->toDateString()])
@@ -24,7 +25,9 @@ class BuildShoppingList
             ->with(['recipe.ingredients'])
             ->get();
 
+        /** @var array<string, array{name: string, unit: string|null, quantity: float, price: float, recipe_ids: list<int>}> $aggregated */
         $aggregated = [];
+        /** @var list<array{name: string, unit: string|null, quantity: null, display_quantity: null, price: string, recipe_ids: list<int>}> $nonAggregated */
         $nonAggregated = [];
 
         foreach ($entries as $entry) {
@@ -74,6 +77,7 @@ class BuildShoppingList
             }
         }
 
+        /** @var Collection<int, array{name: string, unit: string|null, quantity: string|null, display_quantity: string|null, price: string, recipe_ids: list<int>}> $recipeItems */
         $recipeItems = collect(array_values($aggregated))
             ->map(function (array $item): array {
                 $quantity = round((float) $item['quantity'], 2);
@@ -93,6 +97,7 @@ class BuildShoppingList
             ->merge($nonAggregated)
             ->values();
 
+        /** @var Collection<int, array{id: int, name: string, unit: string|null, quantity: string|null, display_quantity: string|null, price: string|null, checked_at: string|null, source_recipes_count: int, is_custom: bool}> $persisted */
         $persisted = $this->persistList($user, $rangeStart, $rangeEnd, $recipeItems);
 
         return $persisted
@@ -138,15 +143,17 @@ class BuildShoppingList
                 'display_quantity' => $this->formatDisplayQuantity($stored->quantity),
                 'price' => $this->formatDisplayPrice($stored->price),
                 'checked_at' => $stored->checked_at?->toDateTimeString(),
-                'source_recipes_count' => count(array_unique($item['recipe_ids'] ?? [])),
-                'is_custom' => false,
+                'source_recipes_count' => count(array_unique($item['recipe_ids'])),
+                'is_custom' => (bool) false,
             ];
         });
     }
 
-    protected function persistKey(string $name, ?string $unit, ?string $quantity): string
+    protected function persistKey(string $name, ?string $unit, string|float|null $quantity): string
     {
-        return $this->normalizeName($name).'|'.($unit ? Str::lower(trim($unit)) : '').'|'.($quantity ?? 'null');
+        $normalizedQuantity = $quantity === null ? 'null' : (string) $quantity;
+
+        return $this->normalizeName($name).'|'.($unit ? Str::lower(trim($unit)) : '').'|'.$normalizedQuantity;
     }
 
     protected function normalizeName(string $name): string
@@ -159,13 +166,13 @@ class BuildShoppingList
         return number_format($quantity, 2, '.', '');
     }
 
-    protected function formatDisplayQuantity(?string $quantity): ?string
+    protected function formatDisplayQuantity(string|float|null $quantity): ?string
     {
         if ($quantity === null) {
             return null;
         }
 
-        return rtrim(rtrim($quantity, '0'), '.');
+        return rtrim(rtrim((string) $quantity, '0'), '.');
     }
 
     protected function formatStoredPrice(float $price): string
@@ -173,13 +180,13 @@ class BuildShoppingList
         return number_format($price, 2, '.', '');
     }
 
-    protected function formatDisplayPrice(?string $price): ?string
+    protected function formatDisplayPrice(string|float|null $price): ?string
     {
         if ($price === null) {
             return null;
         }
 
-        return rtrim(rtrim($price, '0'), '.');
+        return rtrim(rtrim((string) $price, '0'), '.');
     }
 
     /**
@@ -199,14 +206,14 @@ class BuildShoppingList
 
                 return [
                     'id' => $item->id,
-                    'name' => $item->customItem?->name ?? (string) $item->custom_shopping_item_id,
+                    'name' => $item->customItem->name,
                     'unit' => null,
                     'quantity' => $quantity ? $this->formatStoredQuantity((float) $quantity) : null,
                     'display_quantity' => $quantity ? $this->formatDisplayQuantity($this->formatStoredQuantity((float) $quantity)) : null,
                     'price' => $price ? $this->formatStoredPrice((float) $price) : null,
                     'checked_at' => $item->checked_at?->toDateTimeString(),
                     'source_recipes_count' => 0,
-                    'is_custom' => true,
+                    'is_custom' => (bool) true,
                 ];
             })
             ->all();

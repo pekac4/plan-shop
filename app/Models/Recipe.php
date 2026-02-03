@@ -7,6 +7,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property int|null $original_recipe_id
+ * @property string $title
+ * @property string|null $description
+ * @property int|null $servings
+ * @property int|null $prep_time_minutes
+ * @property int|null $cook_time_minutes
+ * @property string|null $instructions
+ * @property string|null $source_url
+ * @property string|null $cover_image_path
+ * @property string|null $cover_thumbnail_path
+ * @property bool $is_public
+ * @property \Illuminate\Database\Eloquent\Collection<int, Ingredient> $ingredients
+ * @property User $user
+ * @property Recipe|null $originalRecipe
+ * @property \Illuminate\Database\Eloquent\Collection<int, Recipe> $copies
+ */
 class Recipe extends Model
 {
     /** @use HasFactory<\Database\Factories\RecipeFactory> */
@@ -69,6 +88,7 @@ class Recipe extends Model
 
     public function getApproximatePriceAttribute(): float
     {
+        /** @var \Illuminate\Database\Eloquent\Collection<int, Ingredient> $ingredients */
         $ingredients = $this->relationLoaded('ingredients')
             ? $this->ingredients
             : $this->ingredients()->get();

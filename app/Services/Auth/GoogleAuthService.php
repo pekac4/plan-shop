@@ -3,13 +3,13 @@
 namespace App\Services\Auth;
 
 use App\Models\User;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 class GoogleAuthService
 {
@@ -75,7 +75,10 @@ class GoogleAuthService
             return;
         }
 
-        $contentType = $response->header('Content-Type', 'image/jpeg');
+        $contentType = $response->header('Content-Type');
+        if ($contentType === '') {
+            $contentType = 'image/jpeg';
+        }
         $extension = match (true) {
             str_contains($contentType, 'png') => 'png',
             str_contains($contentType, 'webp') => 'webp',

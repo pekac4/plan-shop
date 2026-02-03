@@ -13,7 +13,7 @@ class ImageResizer
         }
 
         [$width, $height] = $imageInfo;
-        $mime = $imageInfo['mime'] ?? null;
+        $mime = $imageInfo['mime'];
 
         if (! $mime) {
             return false;

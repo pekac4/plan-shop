@@ -7,6 +7,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $range_start
+ * @property string $range_end
+ * @property string $name
+ * @property string|null $unit
+ * @property string|null $quantity
+ * @property string|null $price
+ * @property \Illuminate\Support\Carbon|null $checked_at
+ * @property User $user
+ */
 class ShoppingListItem extends Model
 {
     /** @use HasFactory<\Database\Factories\ShoppingListItemFactory> */

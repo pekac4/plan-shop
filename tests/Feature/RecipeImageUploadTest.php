@@ -29,12 +29,21 @@ it('stores a recipe cover image and thumbnail', function () {
         ])
         ->call('save');
 
+    /** @var \App\Models\Recipe|null $recipe */
     $recipe = $user->recipes()->latest('id')->first();
 
-    expect($recipe)->not()->toBeNull()
-        ->and($recipe->cover_image_path)->not->toBeNull()
-        ->and($recipe->cover_thumbnail_path)->not->toBeNull();
+    expect($recipe)->not()->toBeNull();
 
-    Storage::disk('public')->assertExists($recipe->cover_image_path);
-    Storage::disk('public')->assertExists($recipe->cover_thumbnail_path);
+    if (! $recipe) {
+        return;
+    }
+
+    /** @var \App\Models\Recipe $recipeModel */
+    $recipeModel = $recipe;
+
+    expect($recipeModel->cover_image_path)->not->toBeNull()
+        ->and($recipeModel->cover_thumbnail_path)->not->toBeNull();
+
+    Storage::disk('public')->assertExists($recipeModel->cover_image_path);
+    Storage::disk('public')->assertExists($recipeModel->cover_thumbnail_path);
 });

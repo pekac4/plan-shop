@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property int|null $recipe_id
+ * @property \Illuminate\Support\Carbon $date
+ * @property int|null $servings
+ * @property Recipe|null $recipe
+ * @property User $user
+ */
 class MealPlanEntry extends Model
 {
     /** @use HasFactory<\Database\Factories\MealPlanEntryFactory> */
