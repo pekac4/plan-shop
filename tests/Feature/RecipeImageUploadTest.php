@@ -47,3 +47,28 @@ it('stores a recipe cover image and thumbnail', function () {
     Storage::disk('public')->assertExists($recipeModel->cover_image_path);
     Storage::disk('public')->assertExists($recipeModel->cover_thumbnail_path);
 });
+
+it('rejects svg recipe cover uploads', function () {
+    Storage::fake('public');
+
+    $user = User::factory()->create();
+
+    Livewire::actingAs($user)
+        ->test('pages::recipes.create')
+        ->set('title', 'Veggie Bowl')
+        ->set('instructions', 'Mix and serve.')
+        ->set('coverImage', UploadedFile::fake()->create('cover.svg', 10, 'image/svg+xml'))
+        ->set('ingredients', [
+            [
+                'name' => 'Tomato',
+                'quantity' => 1,
+                'unit' => 'pc',
+                'note' => '',
+                'price' => 0.5,
+            ],
+        ])
+        ->call('save')
+        ->assertHasErrors(['coverImage']);
+
+    expect($user->recipes()->count())->toBe(0);
+});

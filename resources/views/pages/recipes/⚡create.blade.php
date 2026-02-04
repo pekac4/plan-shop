@@ -47,7 +47,7 @@ new class extends Component
             'instructions' => ['required', 'string'],
             'sourceUrl' => ['nullable', 'url'],
             'isPublic' => ['boolean'],
-            'coverImage' => ['nullable', File::image()->max(5 * 1024)],
+            'coverImage' => ['nullable', File::image()->types(['jpg', 'jpeg', 'png', 'webp'])->max(5 * 1024)],
             'ingredients' => ['array'],
             'ingredients.*.name' => ['required', 'string', 'max:120'],
             'ingredients.*.quantity' => ['nullable', 'numeric', 'min:0'],
@@ -222,7 +222,7 @@ new class extends Component
             <x-ui.textarea wire:model="description" name="description" :label="__('Description')" rows="3" />
 
             <div class="grid gap-4 md:grid-cols-2">
-                <x-ui.input wire:model="coverImage" name="coverImage" :label="__('Cover image')" type="file" accept="image/*" />
+                <x-ui.input wire:model="coverImage" name="coverImage" :label="__('Cover image')" type="file" accept=".jpg,.jpeg,.png,.webp" />
                 <div class="flex items-center text-sm text-slate-500">
                     {{ __('Optional. We will resize the image for a clean cover and thumbnail.') }}
                 </div>

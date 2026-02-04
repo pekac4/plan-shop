@@ -11,7 +11,7 @@ class ChefOfMonthService
     public function __construct(private HighlightRecipeSelector $highlightRecipeSelector) {}
 
     /**
-     * @return array{recipe: Recipe, monthLabel: string}
+     * @return array{recipe: Recipe|null, monthLabel: string}
      */
     public function build(): array
     {

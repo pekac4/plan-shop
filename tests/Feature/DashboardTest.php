@@ -175,3 +175,40 @@ test('dashboard shows last month summaries', function () {
     $response->assertSee('instagram.com/?url=');
     $response->assertSee('mail.google.com/mail/?view=cm');
 });
+
+test('dashboard marks copied community recipes already in my book', function () {
+    CarbonImmutable::setTestNow('2026-01-24');
+
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $owner = User::factory()->create();
+    $copyOwner = User::factory()->create();
+
+    $original = Recipe::factory()->for($owner)->create([
+        'title' => 'Original Stew',
+        'is_public' => true,
+    ]);
+
+    $copy = Recipe::factory()->for($copyOwner)->create([
+        'title' => 'Original Stew',
+        'original_recipe_id' => $original->id,
+        'is_public' => true,
+    ]);
+
+    Recipe::factory()->for($user)->create([
+        'original_recipe_id' => $original->id,
+        'is_public' => true,
+    ]);
+
+    MealPlanEntry::factory()->forRecipe($copy, servings: 1)->create([
+        'date' => '2025-12-20',
+        'meal' => 'dinner',
+    ]);
+
+    $response = $this->get(route('dashboard'));
+
+    $response->assertOk();
+    $response->assertSee('Original Stew');
+    $response->assertSee('Already in my book');
+});

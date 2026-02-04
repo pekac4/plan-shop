@@ -129,8 +129,11 @@
                                         {{ $entry->recipe?->saves_count ?? 0 }}
                                     </span>
                                     @if ($entry->recipe)
-                                        @if ($ownedOriginals->has($entry->recipe_id))
-                                            <a class="text-xs font-medium text-slate-500 hover:text-green-700 dark:text-slate-400 dark:hover:text-green-300" href="{{ route('recipes.edit', $ownedOriginals->get($entry->recipe_id)) }}">
+                                        @php
+                                            $originalId = $entry->recipe?->original_recipe_id ?? $entry->recipe_id;
+                                        @endphp
+                                        @if ($ownedOriginals->has($originalId))
+                                            <a class="text-xs font-medium text-slate-500 hover:text-green-700 dark:text-slate-400 dark:hover:text-green-300" href="{{ route('recipes.edit', $ownedOriginals->get($originalId)) }}">
                                                 {{ __('Already in my book') }}
                                             </a>
                                         @else

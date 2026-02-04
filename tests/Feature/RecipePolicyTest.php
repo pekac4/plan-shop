@@ -26,6 +26,18 @@ it('prevents other users from modifying recipes', function () {
         ->and($otherUser->can('duplicate', $recipe))->toBeFalse();
 });
 
+it('prevents owners from updating or deleting copied recipes', function () {
+    $owner = User::factory()->create();
+    $original = Recipe::factory()->for($owner)->create(['is_public' => true]);
+    $copy = Recipe::factory()->for($owner)->create([
+        'original_recipe_id' => $original->id,
+        'is_public' => true,
+    ]);
+
+    expect($owner->can('update', $copy))->toBeFalse()
+        ->and($owner->can('delete', $copy))->toBeFalse();
+});
+
 it('allows viewing public recipes but blocks private ones', function () {
     $owner = User::factory()->create();
     $otherUser = User::factory()->create();
