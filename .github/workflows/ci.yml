@@ -113,7 +113,7 @@ jobs:
           fi
 
       - name: Pint (check)
-        run: vendor/bin/pint --test
+        run: php vendor/bin/pint --test
 
   larastan:
     runs-on: ubuntu-latest
@@ -155,7 +155,7 @@ jobs:
           fi
 
       - name: Larastan
-        run: vendor/bin/phpstan analyse -c phpstan.neon --no-ansi
+        run: php vendor/bin/phpstan analyse -c phpstan.neon --no-ansi
 
   tests:
     runs-on: ubuntu-latest
