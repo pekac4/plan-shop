@@ -30,6 +30,14 @@ jobs:
           node-version: "20"
           cache: "npm"
 
+      - name: Restore vendor cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            vendor
+            ~/.composer/cache
+          key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
+
       - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
 
@@ -38,6 +46,15 @@ jobs:
 
       - name: Build frontend assets
         run: npm run build
+
+      - name: Save vendor cache
+        if: ${{ success() }}
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            vendor
+            ~/.composer/cache
+          key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
 
       - name: Upload Vite build
         uses: actions/upload-artifact@v4
@@ -62,6 +79,14 @@ jobs:
           tools: composer:v2
           cache: composer
 
+      - name: Restore vendor cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            vendor
+            ~/.composer/cache
+          key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
+
       - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
 
@@ -84,6 +109,14 @@ jobs:
           coverage: none
           tools: composer:v2
           cache: composer
+
+      - name: Restore vendor cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            vendor
+            ~/.composer/cache
+          key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
 
       - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
@@ -112,6 +145,14 @@ jobs:
           coverage: none
           tools: composer:v2
           cache: composer
+
+      - name: Restore vendor cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            vendor
+            ~/.composer/cache
+          key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
 
       - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
