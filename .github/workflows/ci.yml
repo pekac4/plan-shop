@@ -39,7 +39,12 @@ jobs:
           key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+        run: |
+          if [ -f vendor/autoload.php ]; then
+            echo "vendor cache hit; skipping composer install"
+          else
+            composer install --no-interaction --no-progress --prefer-dist
+          fi
 
       - name: Install frontend dependencies
         run: npm ci
@@ -88,7 +93,12 @@ jobs:
           key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+        run: |
+          if [ -f vendor/autoload.php ]; then
+            echo "vendor cache hit; skipping composer install"
+          else
+            composer install --no-interaction --no-progress --prefer-dist
+          fi
 
       - name: Pint (check)
         run: vendor/bin/pint --test
@@ -119,7 +129,12 @@ jobs:
           key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+        run: |
+          if [ -f vendor/autoload.php ]; then
+            echo "vendor cache hit; skipping composer install"
+          else
+            composer install --no-interaction --no-progress --prefer-dist
+          fi
 
       - name: Larastan
         run: vendor/bin/phpstan analyse -c phpstan.neon --no-ansi
@@ -155,7 +170,12 @@ jobs:
           key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+        run: |
+          if [ -f vendor/autoload.php ]; then
+            echo "vendor cache hit; skipping composer install"
+          else
+            composer install --no-interaction --no-progress --prefer-dist
+          fi
 
       - name: Download Vite build
         uses: actions/download-artifact@v4
