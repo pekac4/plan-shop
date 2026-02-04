@@ -22,6 +22,7 @@ jobs:
           extensions: mbstring, pdo, sqlite, pdo_sqlite, intl, bcmath, curl, dom, fileinfo, json, openssl, tokenizer, xml
           coverage: none
           tools: composer:v2
+          cache: composer
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -38,6 +39,12 @@ jobs:
       - name: Build frontend assets
         run: npm run build
 
+      - name: Upload Vite build
+        uses: actions/upload-artifact@v4
+        with:
+          name: vite-build
+          path: public/build
+
   pint:
     runs-on: ubuntu-latest
     needs: build
@@ -53,6 +60,7 @@ jobs:
           extensions: mbstring, pdo, sqlite, pdo_sqlite, intl, bcmath, curl, dom, fileinfo, json, openssl, tokenizer, xml
           coverage: none
           tools: composer:v2
+          cache: composer
 
       - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
@@ -75,6 +83,7 @@ jobs:
           extensions: mbstring, pdo, sqlite, pdo_sqlite, intl, bcmath, curl, dom, fileinfo, json, openssl, tokenizer, xml
           coverage: none
           tools: composer:v2
+          cache: composer
 
       - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
@@ -102,9 +111,16 @@ jobs:
           extensions: mbstring, pdo, sqlite, pdo_sqlite, intl, bcmath, curl, dom, fileinfo, json, openssl, tokenizer, xml
           coverage: none
           tools: composer:v2
+          cache: composer
 
       - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Download Vite build
+        uses: actions/download-artifact@v4
+        with:
+          name: vite-build
+          path: public/build
 
       - name: Prepare application
         run: |
