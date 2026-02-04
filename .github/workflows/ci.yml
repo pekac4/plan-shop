@@ -8,13 +8,8 @@ on:
       - master
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-
-    env:
-      APP_ENV: testing
-      DB_CONNECTION: sqlite
-      DB_DATABASE: database/database.sqlite
 
     steps:
       - name: Checkout
@@ -23,7 +18,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.4"
+          php-version: "8.5"
           extensions: mbstring, pdo, sqlite, pdo_sqlite, intl, bcmath, curl, dom, fileinfo, json, openssl, tokenizer, xml
           coverage: none
           tools: composer:v2
@@ -43,6 +38,74 @@ jobs:
       - name: Build frontend assets
         run: npm run build
 
+  pint:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.5"
+          extensions: mbstring, pdo, sqlite, pdo_sqlite, intl, bcmath, curl, dom, fileinfo, json, openssl, tokenizer, xml
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Pint (check)
+        run: vendor/bin/pint --test
+
+  larastan:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.5"
+          extensions: mbstring, pdo, sqlite, pdo_sqlite, intl, bcmath, curl, dom, fileinfo, json, openssl, tokenizer, xml
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Larastan
+        run: vendor/bin/phpstan analyse -c phpstan.neon --no-ansi
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: build
+
+    env:
+      APP_ENV: testing
+      DB_CONNECTION: sqlite
+      DB_DATABASE: database/database.sqlite
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.5"
+          extensions: mbstring, pdo, sqlite, pdo_sqlite, intl, bcmath, curl, dom, fileinfo, json, openssl, tokenizer, xml
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
       - name: Prepare application
         run: |
           cp .env.example .env
@@ -50,12 +113,6 @@ jobs:
           mkdir -p database
           touch database/database.sqlite
           php artisan migrate --no-interaction --force
-
-      - name: Pint (check)
-        run: vendor/bin/pint --test
-
-      - name: Larastan
-        run: vendor/bin/phpstan analyse -c phpstan.neon --no-ansi
 
       - name: Tests
         run: php artisan test --colors=never
