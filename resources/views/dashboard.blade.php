@@ -25,7 +25,7 @@
                     <div class="grid gap-2 text-sm text-slate-700">
                         @forelse ($topRecipes as $entry)
                             <div class="flex items-center justify-between gap-2">
-                                <a class="text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ $entry->recipe_id ? route('recipes.edit', $entry->recipe_id) : route('recipes.index') }}">
+                                <a class="text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ $entry->recipe_id ? route('recipes.show', $entry->recipe_id) : route('recipes.index') }}">
                                     {{ $entry->recipe?->title ?? __('Recipe') }}
                                 </a>
                                 <span class="text-xs text-slate-500 dark:text-slate-400">{{ $entry->uses }} {{ __('uses') }}</span>
@@ -101,7 +101,7 @@
                                     />
                                     <div class="flex flex-col gap-1">
                                         <div class="group relative inline-block">
-                                            <a class="text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ $entry->recipe_id ? route('recipes.edit', $entry->recipe_id) : route('recipes.index') }}">
+                                            <a class="text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ $entry->recipe_id ? route('recipes.show', $entry->recipe_id) : route('recipes.index') }}">
                                                 {{ $entry->recipe?->title ?? __('Recipe') }}
                                             </a>
                                             <div class="pointer-events-none absolute left-0 top-full z-20 mt-2 hidden w-56 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-900 shadow-sm group-hover:block">
@@ -133,7 +133,7 @@
                                             $originalId = $entry->recipe?->original_recipe_id ?? $entry->recipe_id;
                                         @endphp
                                         @if ($ownedOriginals->has($originalId))
-                                            <a class="text-xs font-medium text-slate-500 hover:text-green-700 dark:text-slate-400 dark:hover:text-green-300" href="{{ route('recipes.edit', $ownedOriginals->get($originalId)) }}">
+                                            <a class="text-xs font-medium text-slate-500 hover:text-green-700 dark:text-slate-400 dark:hover:text-green-300" href="{{ route('recipes.show', $ownedOriginals->get($originalId)) }}">
                                                 {{ __('Already in my book') }}
                                             </a>
                                         @else
@@ -205,7 +205,7 @@
                                         :thumbnail="$recipe->cover_thumbnail_url"
                                         emoji="🥕"
                                     />
-                                    <a class="text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ $recipe->id ? route('recipes.edit', $recipe->id) : route('recipes.index') }}">
+                                    <a class="text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ $recipe->id ? route('recipes.show', $recipe->id) : route('recipes.index') }}">
                                         {{ $recipe->title }}
                                     </a>
                                 </div>

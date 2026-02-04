@@ -62,14 +62,14 @@
                                     placeholder-class="text-lg"
                                 />
                                 <div class="flex-1">
-                                    <a class="text-sm font-medium text-slate-900 hover:text-amber-700 dark:text-slate-100 dark:hover:text-amber-300" href="{{ route('recipes.edit', $recipe->id) }}">
+                                    <a class="text-sm font-medium text-slate-900 hover:text-amber-700 dark:text-slate-100 dark:hover:text-amber-300" href="{{ route('recipes.show', $recipe->id) }}">
                                         {{ $recipe->title }}
                                     </a>
                                     <p class="text-xs text-slate-500 dark:text-slate-400">
                                         {{ $recipe->stars ?? 0 }} {{ __('stars') }}
                                     </p>
                                 </div>
-                                <a class="inline-flex items-center text-slate-400 hover:text-amber-600 dark:text-slate-500 dark:hover:text-amber-300" href="{{ route('recipes.edit', $recipe->id) }}" aria-label="{{ __('View recipe') }}">
+                                <a class="inline-flex items-center text-slate-400 hover:text-amber-600 dark:text-slate-500 dark:hover:text-amber-300" href="{{ route('recipes.show', $recipe->id) }}" aria-label="{{ __('View recipe') }}">
                                     <flux:icon.chevron-right class="size-4" />
                                 </a>
                             </div>

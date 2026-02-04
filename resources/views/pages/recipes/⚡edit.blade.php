@@ -386,7 +386,7 @@ new class extends Component
     @enderror
 
     <x-ui.share-links
-        :url="route('recipes.edit', $recipe)"
+        :url="route('recipes.show', $recipe)"
         :text="__('Try this recipe: :title', ['title' => $recipe->title])"
         :label="__('Share this recipe')"
     />

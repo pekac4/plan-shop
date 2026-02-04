@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="md:ms-auto">
-                        <x-ui.button :href="route('recipes.edit', $recipe->id)" variant="secondary">
+                        <x-ui.button :href="route('recipes.show', $recipe->id)" variant="secondary">
                             {{ __('View recipe') }}
                         </x-ui.button>
                     </div>

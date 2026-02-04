@@ -12,7 +12,7 @@ it('shows recipe share links on the detail view', function () {
         'title' => 'Herb Pasta',
     ]);
 
-    $response = $this->actingAs($user)->get(route('recipes.edit', $recipe));
+    $response = $this->actingAs($user)->get(route('recipes.show', $recipe));
 
     $response->assertOk();
     $response->assertSee('Share this recipe');
