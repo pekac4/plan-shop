@@ -50,7 +50,7 @@ class DashboardService
         $topCommunityRecipes = $this->repository->topCommunityRecipes($user, $monthRange);
         $communityRecipeIds = $topCommunityRecipes->pluck('recipe_id')->filter()->unique();
         $communityOriginalIds = $topCommunityRecipes
-            ->map(fn ($entry) => $entry->recipe?->original_recipe_id ?? $entry->recipe_id)
+            ->map(fn ($entry) => $entry->recipe->original_recipe_id ?? $entry->recipe_id)
             ->filter()
             ->unique();
 
