@@ -155,7 +155,7 @@ new class extends Component {
                 @endif
 
                 <div class="flex-1">
-                    <x-ui.input wire:model="avatar" name="avatar" :label="__('Avatar image')" type="file" accept="image/*" />
+                    <x-ui.input wire:model="avatar" name="avatar" :label="__('Avatar image')" type="file" accept=".jpg,.jpeg,.png,.webp" />
                     <p class="mt-1 text-xs text-slate-500">{{ __('Optional. Square images work best.') }}</p>
                 </div>
             </div>

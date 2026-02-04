@@ -49,6 +49,10 @@ class DashboardService
 
         $topCommunityRecipes = $this->repository->topCommunityRecipes($user, $monthRange);
         $communityRecipeIds = $topCommunityRecipes->pluck('recipe_id')->filter()->unique();
+        $communityOriginalIds = $topCommunityRecipes
+            ->map(fn ($entry) => $entry->recipe?->original_recipe_id ?? $entry->recipe_id)
+            ->filter()
+            ->unique();
 
         return [
             'topRecipes' => $topRecipes,
@@ -56,7 +60,7 @@ class DashboardService
             'displayTotal' => $displayTotal,
             'currencySymbol' => $currencySymbol,
             'monthLabel' => $monthLabel,
-            'ownedOriginals' => $this->repository->ownedOriginals($user, $communityRecipeIds),
+            'ownedOriginals' => $this->repository->ownedOriginals($user, $communityOriginalIds),
             'topCommunityRecipes' => $topCommunityRecipes,
             'topSavedUsers' => $this->repository->topSavedUsers(),
             'topSavedRecipes' => $this->repository->topSavedRecipes(),

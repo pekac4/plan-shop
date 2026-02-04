@@ -15,7 +15,7 @@ class HomeService
     ) {}
 
     /**
-     * @return array{recipeOfMonth: Recipe, monthLabel: string}
+     * @return array{recipeOfMonth: Recipe|null, monthLabel: string}
      */
     public function build(): array
     {
@@ -23,7 +23,9 @@ class HomeService
         $monthEnd = $monthStart->endOfMonth();
 
         $recipeOfMonth = $this->highlightRecipeSelector->chefOfMonth($monthStart, $monthEnd);
-        $this->recipeCoverService->ensureCover($recipeOfMonth);
+        if ($recipeOfMonth?->exists) {
+            $this->recipeCoverService->ensureCover($recipeOfMonth);
+        }
 
         return [
             'recipeOfMonth' => $recipeOfMonth,

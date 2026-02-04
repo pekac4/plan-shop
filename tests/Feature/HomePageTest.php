@@ -36,3 +36,13 @@ it('shows the marketing hero and recipe of the month', function () {
     $response->assertSee('instagram.com/?url=');
     $response->assertSee('mail.google.com/mail/?view=cm');
 });
+
+it('does not create demo recipes when none exist', function () {
+    CarbonImmutable::setTestNow('2026-01-25');
+
+    expect(Recipe::query()->count())->toBe(0);
+
+    $this->get(route('home'))->assertOk();
+
+    expect(Recipe::query()->count())->toBe(0);
+});

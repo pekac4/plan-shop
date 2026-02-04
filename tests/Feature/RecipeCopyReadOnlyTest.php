@@ -86,3 +86,19 @@ it('uses original recipe cover images for copies', function () {
     expect($copy->cover_image_url)->toBe($recipe->cover_image_url)
         ->and($copy->cover_thumbnail_url)->toBe($recipe->cover_thumbnail_url);
 });
+
+it('shows save as copy for public recipes owned by others', function () {
+    $owner = User::factory()->create();
+    $user = User::factory()->create();
+
+    $recipe = Recipe::factory()->for($owner)->create([
+        'title' => 'Public Soup',
+        'is_public' => true,
+    ]);
+
+    $this->actingAs($user)
+        ->get(route('recipes.edit', $recipe))
+        ->assertOk()
+        ->assertSee('Save as copy')
+        ->assertDontSee('Delete');
+});

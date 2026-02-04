@@ -88,7 +88,7 @@ class DashboardRepository
             ->orderByDesc('uses')
             ->with([
                 'recipe' => function ($query): void {
-                    $query->select('id', 'title', 'is_public', 'user_id', 'cover_image_path', 'cover_thumbnail_path')
+                    $query->select('id', 'title', 'is_public', 'user_id', 'original_recipe_id', 'cover_image_path', 'cover_thumbnail_path')
                         ->selectSub($this->recipeSavesCountSubquery(), 'saves_count')
                         ->with('ingredients:id,recipe_id,name');
                 },

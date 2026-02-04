@@ -18,6 +18,7 @@ new class extends Component
 
     public Recipe $recipe;
     public bool $canEdit = false;
+    public bool $canDuplicate = false;
 
     public string $title = '';
     public string $description = '';
@@ -36,6 +37,9 @@ new class extends Component
 
         $this->recipe = $recipe->loadMissing('originalRecipe.user');
         $this->canEdit = Gate::allows('update', $recipe);
+        $this->canDuplicate = Gate::allows('duplicate', $recipe)
+            && $recipe->original_recipe_id === null
+            && $recipe->user_id !== Auth::id();
 
         if ($recipe->original_recipe_id) {
             $this->canEdit = false;
@@ -363,10 +367,13 @@ new class extends Component
                 {{ __('Back to recipes') }}
             </x-ui.button>
 
-            @if ($canEdit)
+            @if ($canDuplicate)
                 <x-ui.button size="sm" variant="primary" type="button" wire:click="duplicateRecipe">
                     {{ __('Save as copy') }}
                 </x-ui.button>
+            @endif
+
+            @if ($canEdit)
                 <x-ui.button size="sm" variant="danger" type="button" wire:click="deleteRecipe">
                     {{ __('Delete') }}
                 </x-ui.button>
@@ -399,7 +406,7 @@ new class extends Component
                     name="coverImage"
                     :label="__('Cover image')"
                     type="file"
-                    accept="image/*"
+                    accept=".jpg,.jpeg,.png,.webp"
                     :disabled="! $canEdit"
                 />
                 <div class="flex items-center text-sm text-slate-500 dark:text-slate-400">
