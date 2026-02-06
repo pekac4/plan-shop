@@ -206,7 +206,7 @@ new class extends Component
                             />
                             <div class="space-y-2">
                                 <div>
-                                    <a class="text-lg font-semibold text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ route('recipes.edit', $recipe) }}">
+                                    <a class="text-lg font-semibold text-slate-900 hover:text-green-700 dark:text-slate-100 dark:hover:text-green-300" href="{{ route('recipes.show', $recipe) }}">
                                         {{ $recipe->title }}
                                     </a>
                                     <p class="text-sm text-slate-600 dark:text-slate-300">
@@ -242,7 +242,7 @@ new class extends Component
 
                         <div class="flex flex-wrap items-center gap-2">
                             @if ($isCopiedFromOther)
-                                <x-ui.button size="sm" variant="secondary" :href="route('recipes.edit', $recipe)">
+                                <x-ui.button size="sm" variant="secondary" :href="route('recipes.show', $recipe)">
                                     {{ __('View') }}
                                 </x-ui.button>
                             @else
@@ -251,7 +251,7 @@ new class extends Component
                                         {{ __('Edit') }}
                                     </x-ui.button>
                                 @else
-                                    <x-ui.button size="sm" variant="secondary" :href="route('recipes.edit', $recipe)">
+                                    <x-ui.button size="sm" variant="secondary" :href="route('recipes.show', $recipe)">
                                         {{ __('View') }}
                                     </x-ui.button>
                                 @endcan
