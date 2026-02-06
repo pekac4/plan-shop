@@ -10,6 +10,10 @@ jobs:
   ci:
     runs-on: ubuntu-latest
     environment: Testing
+    env:
+      APP_ENV: testing
+      DB_CONNECTION: sqlite
+      DB_DATABASE: database/database.sqlite
     strategy:
       matrix:
         php-version: ["8.4"]
@@ -44,6 +48,12 @@ jobs:
 
       - name: Generate Application Key
         run: php artisan key:generate
+
+      - name: Prepare Database
+        run: |
+          mkdir -p database
+          touch database/database.sqlite
+          php artisan migrate --no-interaction --force
 
       - name: Build Assets
         run: npm run build
