@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Recipes;
 
+use App\Models\Ingredient;
 use App\Models\Recipe;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -15,7 +16,7 @@ class Show extends Component
     public Recipe $recipe;
 
     /**
-     * @var array<int, array{name: string, quantity: float|null, unit: string|null, price: float|null, note: string|null}>
+     * @var array<int, array{name: string, quantity: string|null, unit: string|null, price: string|null, note: string|null}>
      */
     public array $ingredients = [];
 
@@ -43,10 +44,13 @@ class Show extends Component
         $this->coverImageUrl = $this->recipe->cover_image_url;
         $this->coverThumbnailUrl = $this->recipe->cover_thumbnail_url;
 
-        $this->ingredients = $this->recipe->ingredients()
+        /** @var \Illuminate\Database\Eloquent\Collection<int, Ingredient> $ingredients */
+        $ingredients = $this->recipe->ingredients()
             ->orderBy('id')
-            ->get()
-            ->map(fn ($ingredient) => [
+            ->get();
+
+        $this->ingredients = $ingredients
+            ->map(fn (Ingredient $ingredient): array => [
                 'name' => $ingredient->name,
                 'quantity' => $ingredient->quantity,
                 'unit' => $ingredient->unit,
@@ -61,7 +65,7 @@ class Show extends Component
     }
 
     /**
-     * @param  array<int, array{name: string, quantity: float|null, unit: string|null, price: float|null, note: string|null}>  $ingredients
+     * @param  array<int, array{name: string, quantity: string|null, unit: string|null, price: string|null, note: string|null}>  $ingredients
      */
     protected function calculateTotalCost(array $ingredients): ?float
     {
